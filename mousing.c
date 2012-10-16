@@ -26,10 +26,8 @@ int main(int argc, char **argv) {
       printw("Length: %lu \r", mouseMovement);
       refresh();
     }
-  
   }
 
   return 0;
-
 }
 
