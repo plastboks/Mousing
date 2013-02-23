@@ -15,37 +15,31 @@
 
 struct input_event ev;
 
-unsigned long int mouseMovement = 0;
-unsigned int leftMouseClick = 0;
-unsigned int rightMouseClick = 0;
+unsigned long int mMov = 0;
+unsigned int mLC = 0;
+unsigned int mRC = 0;
 
 
 void readMouse(int fd) {
-  
   if(read(fd, &ev, sizeof(struct input_event))) {
-
     switch( ev.time.tv_sec ) {
       case LEFTCLICK:
-        leftMouseClick++;
+        mLC++;
         break;
       case RIGHTCLICK :
-        rightMouseClick++;
+        mRC++;
         break;
       default :
-        mouseMovement++;
+        mMov++;
     }
   }
-
 }
 
 
 int main() {
-
   int fd;
-
   initscr();
   curs_set(0);
-
 
   if ((fd = open(MOUSEFILE, O_RDONLY)) == -1) {
     perror("evdev open");
@@ -55,11 +49,10 @@ int main() {
   while (true) { 
     readMouse(fd);
 
-    mvprintw(0,0, "Left click: %d, ", leftMouseClick);
-    mvprintw(1,0, "Right click: %d, ", rightMouseClick);
-    mvprintw(2,0, "Mousemovement: %d ", mouseMovement);
+    mvprintw(0,0, "Left click: %d, ", mLC);
+    mvprintw(1,0, "Right click: %d, ", mRC);
+    mvprintw(2,0, "Mousemovement: %d ", mMov);
     refresh();
   }
-
   return 0;
 }
