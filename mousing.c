@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.3
+ * @version: 0.0.4
  *
  * @date: 2013-02-24
  *
@@ -34,7 +34,7 @@
 #include <linux/input.h>
 #include <fcntl.h>
 
-#define VERSION 0.0.3
+#define VERSION 0.0.4
 #define MOUSEFILE "/dev/input/mice"
 #define LEFTCLICK 9
 #define RIGHTCLICK 10
@@ -46,7 +46,17 @@ unsigned int mLC = 0;
 unsigned int mRC = 0;
 
 
-void readMouse(int fd) {
+WINDOW *create_newwin(int height, int width, int starty, int startx) { 
+  WINDOW *local_win;
+
+  local_win = newwin(height, width, starty, startx);
+  box(local_win, 0 , 0);
+  wrefresh(local_win);
+  return local_win;
+}
+
+
+void read_mouse(int fd) {
   if(read(fd, &ev, sizeof(struct input_event))) {
     switch( ev.time.tv_sec ) {
       case LEFTCLICK:
@@ -62,16 +72,30 @@ void readMouse(int fd) {
 }
 
 
-void printState(int fd) {
-  readMouse(fd);
-  mvprintw(0,0, "Left click: %d, ", mLC);
-  mvprintw(1,0, "Right click: %d, ", mRC);
-  mvprintw(2,0, "Mousemovement: %d ", mMov);
+void print_data(int starty, int startx) {
+  mvprintw(starty + 2, startx + 2, "Left click: %d, ", mLC);
+  mvprintw(starty + 3, startx + 2, "Right click: %d, ", mRC);
+  mvprintw(starty + 4, startx + 2, "Mousemovement: %d ", mMov);
+}
+
+
+void destroy_win(WINDOW *local_win) { 
+  wborder(local_win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+  wrefresh(local_win);
+  delwin(local_win);
+  endwin();
   refresh();
 }
 
 
-int main() {
+int main(int argc, char *argv[]) { 
+  WINDOW *my_win;
+
+  int oldlines, oldcols, startx, starty;
+  int box_height = 15;
+  int box_width = 30; 
+
+  int ch;
   int fd;
   
   if ((fd = open(MOUSEFILE, O_RDONLY)) == -1) {
@@ -81,10 +105,32 @@ int main() {
 
   initscr();
   curs_set(0);
+  cbreak();
+  nodelay(stdscr, true);
 
-  while (true) { 
-    printState(fd);
-  }
+  starty = (LINES - box_height) / 2; 
+  startx = (COLS - box_width) / 2;
+  oldlines = LINES;
+  oldcols = COLS;
+  printw("Press Q to exit");
+  refresh();
+  my_win = create_newwin(box_height, box_width, starty, startx);
 
+  do { 
+    read_mouse(fd);
+    if ((oldlines != LINES) || (oldcols != COLS)) {
+      starty = (LINES - box_height) / 2; 
+      startx = (COLS - box_width) / 2;
+      destroy_win(my_win);
+      my_win = create_newwin(box_height, box_width, starty, startx);
+    }
+    print_data(starty, startx);
+    refresh();
+    oldlines = LINES;
+    oldcols = COLS;
+  } while ((ch = getch()) != 'Q');
+
+  endwin();
   return 0;
+
 }
