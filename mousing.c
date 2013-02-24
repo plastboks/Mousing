@@ -1,15 +1,26 @@
+/*
+ * Mousing main file.
+ *
+ * @filename: mousing.c
+ *
+ * @version: 0.0.3
+ *
+ * @date: 2013-02-24
+ *
+ * @description: Mousing main program file
+ *
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 #include <ncurses.h>
-
 #include <linux/input.h>
 #include <fcntl.h>
 
-#define VERSION 0.02
+#define VERSION 0.0.3
 #define MOUSEFILE "/dev/input/mice"
-
 #define LEFTCLICK 9
 #define RIGHTCLICK 10
 
