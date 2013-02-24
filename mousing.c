@@ -34,7 +34,7 @@
 #include <linux/input.h>
 #include <fcntl.h>
 
-#define VERSION 0.0.4
+#define VERSION 0.04
 #define MOUSEFILE "/dev/input/mice"
 #define LEFTCLICK 9
 #define RIGHTCLICK 10
@@ -73,9 +73,10 @@ void read_mouse(int fd) {
 
 
 void print_data(int starty, int startx) {
+  mvprintw(starty, startx + 7, "### Mousing %.2f ###", VERSION);
   mvprintw(starty + 2, startx + 2, "Left click: %d, ", mLC);
   mvprintw(starty + 3, startx + 2, "Right click: %d, ", mRC);
-  mvprintw(starty + 4, startx + 2, "Mousemovement: %d ", mMov);
+  mvprintw(starty + 4, startx + 2, "Movement: %d ", mMov);
 }
 
 
@@ -92,8 +93,8 @@ int main(int argc, char *argv[]) {
   WINDOW *my_win;
 
   int oldlines, oldcols, startx, starty;
-  int box_height = 15;
-  int box_width = 30; 
+  int box_height = 10;
+  int box_width = 35; 
 
   int ch;
   int fd;
