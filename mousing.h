@@ -28,3 +28,4 @@
 
 
 void readMouse(int fd);
+void printState(int fd);

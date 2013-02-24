@@ -62,23 +62,29 @@ void readMouse(int fd) {
 }
 
 
+void printState(int fd) {
+  readMouse(fd);
+  mvprintw(0,0, "Left click: %d, ", mLC);
+  mvprintw(1,0, "Right click: %d, ", mRC);
+  mvprintw(2,0, "Mousemovement: %d ", mMov);
+  refresh();
+}
+
+
 int main() {
   int fd;
-  initscr();
-  curs_set(0);
-
+  
   if ((fd = open(MOUSEFILE, O_RDONLY)) == -1) {
     perror("evdev open");
     exit(1);
   }
 
-  while (true) { 
-    readMouse(fd);
+  initscr();
+  curs_set(0);
 
-    mvprintw(0,0, "Left click: %d, ", mLC);
-    mvprintw(1,0, "Right click: %d, ", mRC);
-    mvprintw(2,0, "Mousemovement: %d ", mMov);
-    refresh();
+  while (true) { 
+    printState(fd);
   }
+
   return 0;
 }
