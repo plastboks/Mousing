@@ -121,16 +121,15 @@ int main(int argc, char *argv[]) {
     if ((oldlines != LINES) || (oldcols != COLS)) {
       starty = (LINES - box_height) / 2; 
       startx = (COLS - box_width) / 2;
+      oldlines = LINES;
+      oldcols = COLS;
       destroy_win(my_win);
       my_win = create_newwin(box_height, box_width, starty, startx);
     }
     print_data(starty, startx);
     refresh();
-    oldlines = LINES;
-    oldcols = COLS;
   } while ((ch = getch()) != 'Q');
 
   endwin();
   return 0;
-
 }
