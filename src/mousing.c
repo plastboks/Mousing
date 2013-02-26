@@ -77,12 +77,22 @@ void read_mouse(int fd) {
 void print_data(int starty, int startx) {
   int offset = 20;
   mvprintw(starty, startx + 7, "### Mousing %.2f ###", VERSION);
+
   mvprintw(starty + 2, startx + 2, "Left click:");
+  attron(COLOR_PAIR(2));
   mvprintw(starty + 2, startx + offset, "%d", mLC);
+  attroff(COLOR_PAIR(2));
+  
   mvprintw(starty + 3, startx + 2, "Right click:");
+  attron(COLOR_PAIR(2));
   mvprintw(starty + 3, startx + offset, "%d", mRC);
+  attroff(COLOR_PAIR(2));
+
   mvprintw(starty + 4, startx + 2, "Movement:");
+  attron(COLOR_PAIR(2));
   mvprintw(starty + 4, startx + offset, "%s", commaprint(mMov));
+  attroff(COLOR_PAIR(2));
+
 }
 
 
@@ -95,25 +105,42 @@ void destroy_win(WINDOW *local_win) {
 }
 
 
+void my_setup() {
+  initscr();
+  curs_set(0);
+  cbreak();
+  nodelay(stdscr, true);
+}
+
+
+void my_colors() {
+  if (has_colors() == FALSE) {
+    endwin();
+    printf("Your terminal does not support colors\n");
+    exit(1);
+  }
+  start_color();
+  init_pair(1, COLOR_RED, COLOR_BLACK);
+  init_pair(2, COLOR_CYAN, COLOR_BLACK);
+  init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
+}
+
+
 int main(int argc, char *argv[]) { 
   WINDOW *my_win;
 
   int oldlines, oldcols, startx, starty;
+  int ch, fd;
   int box_height = 10;
   int box_width = 35; 
-
-  int ch;
-  int fd;
   
   if ((fd = open(MOUSEFILE, O_RDONLY)) == -1) {
     perror("evdev open");
     exit(1);
   }
 
-  initscr();
-  curs_set(0);
-  cbreak();
-  nodelay(stdscr, true);
+  my_setup();
+  my_colors();
 
   starty = (LINES - box_height) / 2; 
   startx = (COLS - box_width) / 2;

@@ -31,3 +31,5 @@ WINDOW *create_newwin(int height, int width, int starty, int startx);
 void destroy_win(WINDOW *local_win);
 void read_mouse(int fd);
 void print_data(int starty, int startx);
+void my_setup();
+void my_colors();
