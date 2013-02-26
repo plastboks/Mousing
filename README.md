@@ -6,7 +6,7 @@ Mousing is a microscopic Linux program for tracking mousemovement (scrolling inc
 Compiling
 =========
 
-Compiling this program is simply done by; "make" or "gcc mousing.c -lncurses -o mousing -I."
+Compiling this program is simply done by: "make".
 
 
 About
