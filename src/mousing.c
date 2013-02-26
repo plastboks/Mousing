@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.4
+ * @version: 0.0.5
  *
  * @date: 2013-02-24
  *
@@ -34,7 +34,9 @@
 #include <linux/input.h>
 #include <fcntl.h>
 
-#define VERSION 0.04
+#include "functions.h"
+
+#define VERSION 0.05
 #define MOUSEFILE "/dev/input/mice"
 #define LEFTCLICK 9
 #define RIGHTCLICK 10
@@ -73,10 +75,14 @@ void read_mouse(int fd) {
 
 
 void print_data(int starty, int startx) {
+  int offset = 20;
   mvprintw(starty, startx + 7, "### Mousing %.2f ###", VERSION);
-  mvprintw(starty + 2, startx + 2, "Left click: %d, ", mLC);
-  mvprintw(starty + 3, startx + 2, "Right click: %d, ", mRC);
-  mvprintw(starty + 4, startx + 2, "Movement: %d ", mMov);
+  mvprintw(starty + 2, startx + 2, "Left click:");
+  mvprintw(starty + 2, startx + offset, "%d", mLC);
+  mvprintw(starty + 3, startx + 2, "Right click:");
+  mvprintw(starty + 3, startx + offset, "%d", mRC);
+  mvprintw(starty + 4, startx + 2, "Movement:");
+  mvprintw(starty + 4, startx + offset, "%s", commaprint(mMov));
 }
 
 

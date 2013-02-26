@@ -1,13 +1,13 @@
 /*
- * Mousing header file
+ * Mousing functions header file
  *
- * @filename: mousing.h
+ * @filename: functions.h
  *
- * @version: 0.0.4
+ * @version: 0.0.1
  *
- * @date: 2013-02-24
+ * @date: 2013-02-26
  *
- * @description: Mousing main header file.
+ * @description: Mousing functions header file
  *
  * This file is part of Mousing.
  *
@@ -26,8 +26,6 @@
  *
  */
 
+#include <locale.h>
 
-WINDOW *create_newwin(int height, int width, int starty, int startx);
-void destroy_win(WINDOW *local_win);
-void read_mouse(int fd);
-void print_data(int starty, int startx);
+char *commaprint(unsigned long n);

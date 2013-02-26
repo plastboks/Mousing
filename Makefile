@@ -1,5 +1,19 @@
 CC=gcc
-CFLAGS=-lncurses -I.
+CFLAGS=-Wall -Iinc -std=c99
+LFLAGS=-lncurses
 
-mousing: mousing.o
-	$(CC) -o mousing mousing.o $(CFLAGS)
+ODIR=obj
+
+_OBJ = mousing.o functions.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+mousing: $(OBJ)
+	$(CC) -o $@ $^ $(LFLAGS)
+
+$(ODIR)/%.o: src/%.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+.PHONY: clean
+
+clean:
+	rm -f $(ODIR)/*.o mousing
