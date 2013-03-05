@@ -43,9 +43,11 @@ void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r) {
   int offset = 20;
   mvprintw(starty, startx + 10, "### Mousing ###");
   
-  mvprintw(starty + 2, startx + 2, "Mouse pos:");
+  mvprintw(starty + 2, startx + 2, "Mouse y-pos:");
+  mvprintw(starty + 3, startx + 2, "Mouse x-pos:");
   attron(COLOR_PAIR(2));
-  mvprintw(starty + 2, startx + offset, "%d:%d", m_y, m_x);
+  mvprintw(starty + 2, startx + offset, "%d ", m_y);
+  mvprintw(starty + 3, startx + offset, "%d ", m_x);
   attroff(COLOR_PAIR(2));
 }
 
