@@ -33,6 +33,9 @@
 #include <ncurses.h>
 #include <linux/input.h>
 #include <fcntl.h>
+#include <X11/Xlib.h>
+#include <assert.h>
+#include <malloc.h>
 
 #include "functions.h"
 
@@ -58,6 +61,12 @@ WINDOW *create_newwin(int height, int width, int starty, int startx) {
 }
 
 
+static int _XlibErrorHandler(Display *display, XErrorEvent *event) {
+    fprintf(stderr, "An error occured detecting the mouse position\n");
+    return True;
+}
+
+
 void read_mouse(int fd) {
   if(read(fd, &ev, sizeof(struct input_event))) {
     switch( ev.time.tv_sec ) {
@@ -77,17 +86,20 @@ void read_mouse(int fd) {
 void print_data(int starty, int startx) {
   int offset = 20;
   mvprintw(starty, startx + 7, "### Mousing %.2f ###", VERSION);
-
+  
+  // output left click
   mvprintw(starty + 2, startx + 2, "Left click:");
   attron(COLOR_PAIR(2));
   mvprintw(starty + 2, startx + offset, "%d", mLC);
   attroff(COLOR_PAIR(2));
-  
+
+  // output right click
   mvprintw(starty + 3, startx + 2, "Right click:");
   attron(COLOR_PAIR(2));
   mvprintw(starty + 3, startx + offset, "%d", mRC);
   attroff(COLOR_PAIR(2));
 
+  // output movement (in px)
   mvprintw(starty + 4, startx + 2, "Movement:");
   attron(COLOR_PAIR(2));
   mvprintw(starty + 4, startx + offset, "%s", commaprint(mMov));
@@ -138,6 +150,8 @@ int main(int argc, char *argv[]) {
     perror("evdev open");
     exit(1);
   }
+
+  XSetErrorHandler(_XlibErrorHandler);
 
   my_setup();
   my_colors();
