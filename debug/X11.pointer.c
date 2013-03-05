@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <malloc.h>
 
+
 static int _XlibErrorHandler(Display *display, XErrorEvent *event) {
     fprintf(stderr, "An error occured detecting the mouse position\n");
     return True;

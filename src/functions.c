@@ -30,6 +30,8 @@
 
 /*  code found on the interwebs 
  *  @ http://www.eskimo.com/~scs/c-faq.com/stdio/commaprint.html 
+ *  this adds a function for printing unsigned integers (longs)
+ *  with tousands commaseperator.
  */
 char *commaprint(unsigned long n) {
   static int comma = '\0';

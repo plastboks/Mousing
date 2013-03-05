@@ -1,13 +1,13 @@
 /*
- * Mousing header file
+ * Mousing x11mouse.h file
  *
- * @filename: mousing.h
+ * @filename: x11mouse.h
  *
- * @version: 0.0.5
+ * @version: 0.0.1
  *
- * @date: 2013-02-24
+ * @date: 2013-03-04
  *
- * @description: Mousing main header file.
+ * @description: Mousing x11mouse read file
  *
  * This file is part of Mousing.
  *
@@ -26,10 +26,18 @@
  *
  */
 
+#include <X11/Xlib.h>
+#include <assert.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <malloc.h>
 
-WINDOW *create_newwin(int height, int width, int starty, int startx);
-void destroy_win(WINDOW *local_win);
-void read_mouse(int fd);
-void print_data(int starty, int startx);
-void my_setup();
-void my_colors();
+int number_of_screens;
+Bool result;
+Window *root_windows;
+Window window_returned;
+Display *display;
+int win_x, win_y;
+
+void x11read_init();
+void x11read_mouse(int *mouse_x, int *mouse_y, unsigned int *mask_return);

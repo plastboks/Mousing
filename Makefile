@@ -4,7 +4,7 @@ LFLAGS=-lncurses -lX11
 
 ODIR=obj
 
-_OBJ = mousing.o functions.o
+_OBJ = mousing.o functions.o x11mouse.o ncbox.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 mousing: $(OBJ)

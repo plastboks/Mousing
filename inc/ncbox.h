@@ -1,13 +1,13 @@
 /*
- * Mousing header file
+ * Mousing ncbox.h file
  *
- * @filename: mousing.h
+ * @filename: ncbox.h
  *
- * @version: 0.0.5
+ * @version: 0.0.1
  *
- * @date: 2013-02-24
+ * @date: 2013-03-04
  *
- * @description: Mousing main header file.
+ * @description: Mousing ncurses box header file
  *
  * This file is part of Mousing.
  *
@@ -26,10 +26,15 @@
  *
  */
 
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ncurses.h>
+#include <fcntl.h>
+
 
 WINDOW *create_newwin(int height, int width, int starty, int startx);
+void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r);
 void destroy_win(WINDOW *local_win);
-void read_mouse(int fd);
-void print_data(int starty, int startx);
 void my_setup();
 void my_colors();

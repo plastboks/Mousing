@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.5
+ * @version: 0.0.6
  *
  * @date: 2013-02-24
  *
@@ -26,132 +26,34 @@
  *
  */
 
+// a litte usleep fix
+#define _BSD_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <ncurses.h>
-#include <linux/input.h>
 #include <fcntl.h>
-#include <X11/Xlib.h>
-#include <assert.h>
-#include <malloc.h>
 
 #include "functions.h"
+#include "x11mouse.h"
+#include "ncbox.h"
 
-#define VERSION 0.05
-#define MOUSEFILE "/dev/input/mice"
+#define VERSION 0.06
 #define LEFTCLICK 9
 #define RIGHTCLICK 10
 
-struct input_event ev;
-
-unsigned long int mMov = 0;
-unsigned int mLC = 0;
-unsigned int mRC = 0;
-
-
-WINDOW *create_newwin(int height, int width, int starty, int startx) { 
-  WINDOW *local_win;
-
-  local_win = newwin(height, width, starty, startx);
-  box(local_win, 0 , 0);
-  wrefresh(local_win);
-  return local_win;
-}
-
-
-static int _XlibErrorHandler(Display *display, XErrorEvent *event) {
-    fprintf(stderr, "An error occured detecting the mouse position\n");
-    return True;
-}
-
-
-void read_mouse(int fd) {
-  if(read(fd, &ev, sizeof(struct input_event))) {
-    switch( ev.time.tv_sec ) {
-      case LEFTCLICK:
-        mLC++;
-        break;
-      case RIGHTCLICK :
-        mRC++;
-        break;
-      default :
-        mMov++;
-    }
-  }
-}
-
-
-void print_data(int starty, int startx) {
-  int offset = 20;
-  mvprintw(starty, startx + 7, "### Mousing %.2f ###", VERSION);
-  
-  // output left click
-  mvprintw(starty + 2, startx + 2, "Left click:");
-  attron(COLOR_PAIR(2));
-  mvprintw(starty + 2, startx + offset, "%d", mLC);
-  attroff(COLOR_PAIR(2));
-
-  // output right click
-  mvprintw(starty + 3, startx + 2, "Right click:");
-  attron(COLOR_PAIR(2));
-  mvprintw(starty + 3, startx + offset, "%d", mRC);
-  attroff(COLOR_PAIR(2));
-
-  // output movement (in px)
-  mvprintw(starty + 4, startx + 2, "Movement:");
-  attron(COLOR_PAIR(2));
-  mvprintw(starty + 4, startx + offset, "%s", commaprint(mMov));
-  attroff(COLOR_PAIR(2));
-
-}
-
-
-void destroy_win(WINDOW *local_win) { 
-  wborder(local_win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
-  wrefresh(local_win);
-  delwin(local_win);
-  endwin();
-  refresh();
-}
-
-
-void my_setup() {
-  initscr();
-  curs_set(0);
-  cbreak();
-  nodelay(stdscr, true);
-}
-
-
-void my_colors() {
-  if (has_colors() == FALSE) {
-    endwin();
-    printf("Your terminal does not support colors\n");
-    exit(1);
-  }
-  start_color();
-  init_pair(1, COLOR_RED, COLOR_BLACK);
-  init_pair(2, COLOR_CYAN, COLOR_BLACK);
-  init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
-}
 
 
 int main(int argc, char *argv[]) { 
   WINDOW *my_win;
 
-  int oldlines, oldcols, startx, starty;
-  int ch, fd;
+  int oldlines, oldcols, startx, starty, mouse_x, mouse_y, ch;
   int box_height = 10;
   int box_width = 35; 
-  
-  if ((fd = open(MOUSEFILE, O_RDONLY)) == -1) {
-    perror("evdev open");
-    exit(1);
-  }
+  unsigned int mask_return;
 
-  XSetErrorHandler(_XlibErrorHandler);
+  // init x11read_mouse
+  x11read_init();
 
   my_setup();
   my_colors();
@@ -160,12 +62,14 @@ int main(int argc, char *argv[]) {
   startx = (COLS - box_width) / 2;
   oldlines = LINES;
   oldcols = COLS;
-  printw("Press Q to exit");
+
+  printw("Press Q to exit. Version: %.2f", VERSION);
   refresh();
   my_win = create_newwin(box_height, box_width, starty, startx);
 
   do { 
-    read_mouse(fd);
+    //read from mouse
+    x11read_mouse(&mouse_x, &mouse_y, &mask_return);
     if ((oldlines != LINES) || (oldcols != COLS)) {
       starty = (LINES - box_height) / 2; 
       startx = (COLS - box_width) / 2;
@@ -174,10 +78,14 @@ int main(int argc, char *argv[]) {
       destroy_win(my_win);
       my_win = create_newwin(box_height, box_width, starty, startx);
     }
-    print_data(starty, startx);
+    print_data(starty, startx, mouse_y, mouse_x, mask_return);
     refresh();
+
+    // wait a bit before next itteration.
+    usleep(20000);
   } while ((ch = getch()) != 'Q');
 
   endwin();
+  free(root_windows);
   return 0;
 }
