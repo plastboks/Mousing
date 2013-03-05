@@ -47,10 +47,10 @@
 int main(int argc, char *argv[]) { 
   WINDOW *my_win;
 
-  int oldlines, oldcols, startx, starty, mouse_x, mouse_y, ch;
+  int oldlines, oldcols, sX, sY, mX, mY, ch;
   int box_height = 10;
   int box_width = 35; 
-  unsigned int mask_return;
+  unsigned int mR, mO;
 
   // init x11read_mouse
   x11read_init();
@@ -58,27 +58,27 @@ int main(int argc, char *argv[]) {
   my_setup();
   my_colors();
 
-  starty = (LINES - box_height) / 2; 
-  startx = (COLS - box_width) / 2;
+  sY = (LINES - box_height) / 2; 
+  sX = (COLS - box_width) / 2;
   oldlines = LINES;
   oldcols = COLS;
 
   printw("Press Q to exit. Version: %.2f", VERSION);
   refresh();
-  my_win = create_newwin(box_height, box_width, starty, startx);
+  my_win = create_newwin(box_height, box_width, sY, sX);
 
   do { 
     //read from mouse
-    x11read_mouse(&mouse_x, &mouse_y, &mask_return);
+    x11read_mouse(&mX, &mY, &mO, &mR);
     if ((oldlines != LINES) || (oldcols != COLS)) {
-      starty = (LINES - box_height) / 2; 
-      startx = (COLS - box_width) / 2;
+      sY = (LINES - box_height) / 2; 
+      sX = (COLS - box_width) / 2;
       oldlines = LINES;
       oldcols = COLS;
       destroy_win(my_win);
-      my_win = create_newwin(box_height, box_width, starty, startx);
+      my_win = create_newwin(box_height, box_width, sY, sX);
     }
-    print_data(starty, startx, mouse_y, mouse_x, mask_return);
+    print_data(sY, sX, mY, mX, mR, mO);
     refresh();
 
     // wait a bit before next itteration.

@@ -39,15 +39,17 @@ WINDOW *create_newwin(int height, int width, int starty, int startx) {
 }
 
 
-void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r) {
+void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, unsigned int m_o) {
   int offset = 20;
   mvprintw(starty, startx + 10, "### Mousing ###");
   
-  mvprintw(starty + 2, startx + 2, "Mouse y-pos:");
-  mvprintw(starty + 3, startx + 2, "Mouse x-pos:");
+  mvprintw(starty + 2, startx + 2, "Y-pos:");
+  mvprintw(starty + 3, startx + 2, "X-pos:");
+  mvprintw(starty + 4, startx + 2, "Movement:");
   attron(COLOR_PAIR(2));
   mvprintw(starty + 2, startx + offset, "%d ", m_y);
   mvprintw(starty + 3, startx + offset, "%d ", m_x);
+  mvprintw(starty + 4, startx + offset, "%d ", m_o);
   attroff(COLOR_PAIR(2));
 }
 
