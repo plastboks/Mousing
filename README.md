@@ -19,5 +19,4 @@ The best way to do this is to get some numbers and comparing them on a daily bas
 Other
 =====
 
-The initial code were inspired by user Yann Ramin @ http://stackoverflow.com/users/9167/yann-ramin
-
+Mousing depends on ncurses and X11.
