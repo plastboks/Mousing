@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     usleep(hold_time);
     interval_increment(&interval);
 
-  } while ((ch = getch()) != 'Q');
+  } while ((ch = getch()) != 'q');
 
   endwin();
   free(root_windows);
