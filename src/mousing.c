@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.6
+ * @version: 0.0.7
  *
  * @date: 2013-02-24
  *
@@ -33,28 +33,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <math.h>
 
-#include "functions.h"
 #include "x11mouse.h"
 #include "ncbox.h"
 
-#define VERSION 0.06
-#define LEFTCLICK 9
-#define RIGHTCLICK 10
+#define VERSION 0.07
 
+
+void interval_increment(int *interval) {
+  *interval += 1;
+  if (*interval > pow(2,14)) {
+    *interval = 1;
+  }
+}
 
 
 int main(int argc, char *argv[]) { 
   WINDOW *my_win;
 
   int oldlines, oldcols, sX, sY, mX, mY, ch;
+  int interval = 0;
   int box_height = 10;
   int box_width = 35; 
+  int hold_time = pow(2,15);
   unsigned int mR, mO;
 
-  // init x11read_mouse
   x11read_init();
-
   my_setup();
   my_colors();
 
@@ -68,8 +73,8 @@ int main(int argc, char *argv[]) {
   my_win = create_newwin(box_height, box_width, sY, sX);
 
   do { 
-    //read from mouse
-    x11read_mouse(&mX, &mY, &mO, &mR);
+
+    x11read_mouse(&interval, &mX, &mY, &mO, &mR);
     if ((oldlines != LINES) || (oldcols != COLS)) {
       sY = (LINES - box_height) / 2; 
       sX = (COLS - box_width) / 2;
@@ -81,8 +86,9 @@ int main(int argc, char *argv[]) {
     print_data(sY, sX, mY, mX, mR, mO);
     refresh();
 
-    // wait a bit before next itteration.
-    usleep(20000);
+    usleep(hold_time);
+    interval_increment(&interval);
+
   } while ((ch = getch()) != 'Q');
 
   endwin();

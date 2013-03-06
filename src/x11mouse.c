@@ -49,11 +49,11 @@ void x11read_init() {
 }
 
 
-void x11read_mouse(int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) {
-  int i;
-  int old_mouse_x = *mouse_x;
+void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) {
+
+  int i, mov_y, mov_x;
   int old_mouse_y = *mouse_y;
-  int mov_y, mov_x;
+  int old_mouse_x = *mouse_x;
 
   for (i = 0; i < number_of_screens; i++) {
     result = XQueryPointer(display, root_windows[i], &window_returned,
@@ -64,21 +64,24 @@ void x11read_mouse(int *mouse_x, int *mouse_y, unsigned int *movement, unsigned 
     }
   }
 
-  if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
-    if (old_mouse_x > *mouse_x) {
-      mov_x = old_mouse_x - *mouse_x;
-    } else {
-      mov_x = *mouse_x - old_mouse_x;
-    }
+  if (*interval != 0) {
+     
+    if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
+      if (old_mouse_x > *mouse_x) {
+        mov_x = old_mouse_x - *mouse_x;
+      } else {
+        mov_x = *mouse_x - old_mouse_x;
+      }
 
-    if (old_mouse_y > *mouse_y) {
-      mov_y = old_mouse_y - *mouse_y;
-    } else {
-      mov_y = *mouse_y - old_mouse_y;  
+      if (old_mouse_y > *mouse_y) {
+        mov_y = old_mouse_y - *mouse_y;
+      } else {
+        mov_y = *mouse_y - old_mouse_y;  
+      }
+      *movement += mov_y + mov_x;
     }
-    *movement += mov_y + mov_x;
   }
-
+  
   if (result != True) {
     fprintf(stderr, "No mouse found.\n");
   }

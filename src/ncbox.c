@@ -27,7 +27,7 @@
  */
 
 #include "ncbox.h"
-
+#include "functions.h"
 
 WINDOW *create_newwin(int height, int width, int starty, int startx) { 
   WINDOW *local_win;
@@ -49,7 +49,7 @@ void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, u
   attron(COLOR_PAIR(2));
   mvprintw(starty + 2, startx + offset, "%d ", m_y);
   mvprintw(starty + 3, startx + offset, "%d ", m_x);
-  mvprintw(starty + 4, startx + offset, "%d ", m_o);
+  mvprintw(starty + 4, startx + offset, "%s ", commaprint(m_o));
   attroff(COLOR_PAIR(2));
 }
 
