@@ -53,7 +53,7 @@ void interval_increment(int *interval) {
 int main(int argc, char *argv[]) { 
   WINDOW *my_win;
 
-  //int retval;
+  int retval;
   int oldlines, oldcols, sX, sY, mX, mY, ch;
   int interval = 0;
   int box_height = 10, box_width = 35; 
@@ -61,9 +61,12 @@ int main(int argc, char *argv[]) {
   unsigned int mR, mO;
 
   //sqlite3_stmt *stmt;
-  //sqlite3 *handle;
+  sqlite3 *handle;
 
   x11read_init();
+  db_open_database(&retval, &handle);
+  db_table_create(&retval, &handle);
+  
   my_setup();
   my_colors();
 
@@ -97,5 +100,6 @@ int main(int argc, char *argv[]) {
 
   endwin();
   free(root_windows);
+  sqlite3_close(handle);
   return 0;
 }
