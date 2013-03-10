@@ -29,8 +29,11 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <stdlib.h>
+#include <time.h>
+
 
 void db_open_database(int *retval, sqlite3 **handle);
 void db_table_create(int *retval, sqlite3 **handle);
 void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, int mmov);
+int db_get_mov_sum(int *retval, sqlite3 **handle, sqlite3_stmt **stmt);
 
