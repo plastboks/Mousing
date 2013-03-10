@@ -37,6 +37,7 @@
 
 #include "x11mouse.h"
 #include "ncbox.h"
+#include "sqldb.h"
 
 #define VERSION 0.07
 
@@ -52,12 +53,15 @@ void interval_increment(int *interval) {
 int main(int argc, char *argv[]) { 
   WINDOW *my_win;
 
+  //int retval;
   int oldlines, oldcols, sX, sY, mX, mY, ch;
   int interval = 0;
-  int box_height = 10;
-  int box_width = 35; 
+  int box_height = 10, box_width = 35; 
   int hold_time = pow(2,15);
   unsigned int mR, mO;
+
+  //sqlite3_stmt *stmt;
+  //sqlite3 *handle;
 
   x11read_init();
   my_setup();

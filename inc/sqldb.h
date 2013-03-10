@@ -30,7 +30,7 @@
 #include <sqlite3.h>
 #include <stdlib.h>
 
-int db_init(int *retval, &handle);
-int db_create_table(int *retval, &handle);
-int db_insert(int *retval, &handle, &queries, int *idx, int pos_x, int pos_y, int mov);
-int db_select(int *retval, &handle, &queries, &stmt, int *idx);
+void db_open_database(int *retval, sqlite3 **handle);
+void db_table_create(int *retval, sqlite3 **handle);
+void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, int mmov);
+

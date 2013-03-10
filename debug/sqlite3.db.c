@@ -19,52 +19,68 @@
 #include <sqlite3.h>
 #include <stdlib.h>
 
-int main(int argc, char** args) {
-  int retval;
-  int q_cnt = 5, q_size = 150, idx = 0;
-  char **queries = malloc(sizeof(char) * q_cnt * q_size);
-  
-  sqlite3_stmt *stmt;
-  sqlite3 *handle;
-  
-  retval = sqlite3_open("exampledb.sqlite3", &handle);
+int db_open_database(int *retval, sqlite3 **handle) {
 
-  if (retval) {
+  if (*retval = sqlite3_open("example.db", handle)) {
     printf("Database connection failed \n");
-    return -1;
   } else {
-    printf("Connection successful\n");
+    printf("Database connection successful \n");
   }
+}
 
-  char create_table[100] = "create table if not exists users (uname text primay key, pass text not null, activated integer)";
-  retval = sqlite3_exec(handle, create_table, 0, 0, 0);
 
-  queries[idx++] = "insert into users values ('user1', 'user1pass', 1)";
-  retval = sqlite3_exec(handle, queries[idx-1], 0, 0, 0);
+int db_table_create(int *retval, sqlite3 **handle) {
+ 
+  char id[30] = "id integer primary key";
+  char uname[30] = "uname text not null";
+  char upass[30] = "upass text not null";
+  char activ[30] = "activated integer";
+  char times[50] = "timestamp datetime default current_timestamp";
+  char buffr[300];
+  int qc;
 
-  queries[idx++] = "insert into users values ('user2', 'user2pass', 1)";
-  retval = sqlite3_exec(handle, queries[idx-1], 0, 0, 0);
+  qc = sprintf(buffr, "create table if not exists users (%s, %s, %s, %s, %s)", id, uname, upass, activ, times);
+  *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
+}
 
-  queries[idx++] = "select * from users";
-  retval = sqlite3_prepare_v2(handle, queries[idx-1], -1, &stmt, 0);
 
-  if (retval) {
-    printf("Selecting from database failed\n");
+int db_insert(int *retval, sqlite3 **handle, char uname[30], char upass[30], int activated) {
+
+  char buffr[150];
+  int qc;
+
+  qc = sprintf(buffr, "insert into users (uname, upass, activated) values ('%s', '%s', '%d')", uname, upass, activated);
+  *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
+}
+
+
+int db_select(int *retval, sqlite3_stmt **stmt, sqlite3 **handle) {
+  
+  char buffr[300];
+  int qc;
+
+  qc = sprintf(buffr, "select * from users");
+  if (*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0)) {
+    printf("Selecting from database faile \n");
     return -1;
   }
-  
-  int cols = sqlite3_column_count(stmt);
-  
+}
+
+
+int db_print_query(int *retval, sqlite3_stmt **stmt) {
+
+  int cols = sqlite3_column_count(*stmt);
+
   while(1) {
     
-    retval = sqlite3_step(stmt);
-    if (retval == SQLITE_ROW) {
+    *retval = sqlite3_step(*stmt);
+    if (*retval == SQLITE_ROW) {
       for (int col = 0; col < cols; col++) {
-        const char *val = (const char*)sqlite3_column_text(stmt, col);
-        printf("%s = %s\t", sqlite3_column_name(stmt, col), val);
+        const char *val = (const char*)sqlite3_column_text(*stmt, col);
+        printf("%s = %s\t", sqlite3_column_name(*stmt, col), val);
       }
       printf("\n");
-    } else if (retval == SQLITE_DONE) {
+    } else if (*retval == SQLITE_DONE) {
       printf("All rows fetched\n");
       break;
     } else {
@@ -72,7 +88,28 @@ int main(int argc, char** args) {
       return -1;
     }
   }
+}
+
+
+int main(int argc, char** args) {
+
+  int retval;
+  int q_cnt = 5, q_size = 200, idx = 0;
+  char **queries = malloc(sizeof(char) * q_cnt * q_size);
   
+  sqlite3_stmt *stmt;
+  sqlite3 *handle;
+  
+  db_open_database(&retval, &handle);
+
+  db_table_create(&retval, &handle);
+  db_insert(&retval, &handle, "user1", "user1pass", 1);
+  db_insert(&retval, &handle, "user2", "user2pass", 1);
+
+  db_select(&retval, &stmt, &handle);
+
+  db_print_query(&retval, &stmt);
+
   sqlite3_close(handle);
   return 0;
 }

@@ -26,32 +26,35 @@
  *
  */
 
-#include "sqldb.c"
+#include "sqldb.h"
 
-int db_init(int *retval, &handle) {
-  *retval = sqlite3_open("mousing.sqlite", &handle);
-  if (retval) {
-    printf("Database connection failed\n");
-    return -1;
+void db_open_database(int *retval, sqlite3 **handle) {
+
+  if ((*retval = sqlite3_open("mousing.db", handle))) {
+    printf("Database connection failed \n");
   }
 }
 
-int db_create_table(int *retval, &handle) {
-  char create_table[100] = "create table if not exists mouse (mposx integer, mposy interger, mmov integer, timestamp datetime)";
-  *retval = sqlite3_exec(handle, create_table, 0, 0, 0,);
+
+void db_table_create(int *retval, sqlite3 **handle) {
+ 
+  char id[30] = "id integer primary key";
+  char mposx[30] = "mposx integer";
+  char mposy[30] = "mposy integer";
+  char mmov[30] = "mmov integer";
+  char times[50] = "timestamp datetime default current_timestamp";
+  char buffr[300];
+
+  sprintf(buffr, "create table if not exists mouse (%s, %s, %s, %s, %s)", id, mposx, mposy, mmov, times);
+  *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
-int db_insert(int *retval, &handle, &queries, int *idx, int pos_x, int pos_y, int mov) {
-  &queries[idx++] = ("insert into mouse value (%d, %d, %d)", pos_x, pos_y, mov);
-  *retval = sqlite3_exec(handle, queries[idx-1], 0, 0, 0);
-}
 
-int db_select(int *retval, &handle, &queries, &stmt, int *idx) {
-  &queries[idx++] = "select * from mouse"; //make a more usefull query...
-  retval = sqlite3_prepare_v2(handle, queries[idx-1], -1, &stmt, 0);
-  if (retval) {
-    printf("Selecting from database failed\n");
-    return -1;
-  }
+void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, int mmov) {
+
+  char buffr[150];
+
+  sprintf(buffr, "insert into mouse (mposx, mposy, mmov) values ('%d', '%d', '%d')", mposx, mposy, mmov);
+  *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
