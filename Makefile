@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -Iinc -std=c99
-LFLAGS=-lncurses -lX11 -l sqlite3
+LFLAGS=-lncurses -lX11 -l sqlite3 -lm
 
 ODIR=obj
 

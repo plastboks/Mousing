@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.7
+ * @version: 0.0.8
  *
  * @date: 2013-02-24
  *
@@ -33,21 +33,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <math.h>
 
 #include "x11mouse.h"
 #include "ncbox.h"
 #include "sqldb.h"
+#include "functions.h"
 
-#define VERSION 0.07
+#define VERSION 0.08
 
 
-void interval_increment(int *interval) {
-  *interval += 1;
-  if (*interval > pow(2,14)) {
-    *interval = 1;
-  }
-}
 
 
 int main(int argc, char *argv[]) { 
@@ -60,10 +54,11 @@ int main(int argc, char *argv[]) {
   int hold_time = pow(2,15);
   unsigned int mR, mO;
 
-  //sqlite3_stmt *stmt;
+  sqlite3_stmt *stmt;
   sqlite3 *handle;
 
   x11read_init();
+
   db_open_database(&retval, &handle);
   db_table_create(&retval, &handle);
   
@@ -78,6 +73,8 @@ int main(int argc, char *argv[]) {
   printw("Press Q to exit. Version: %.2f", VERSION);
   refresh();
   my_win = create_newwin(box_height, box_width, sY, sX);
+  
+  db_get_mov(&retval, &handle, &stmt, &mO);
 
   do { 
 
@@ -93,11 +90,16 @@ int main(int argc, char *argv[]) {
     print_data(sY, sX, mY, mX, mR, mO);
     refresh();
 
+    if (interval == 1) {
+      db_insert(&retval, &handle, mX, mY, mO);
+    }
+
+    exp_inc(&interval, 10);
     usleep(hold_time);
-    interval_increment(&interval);
 
   } while ((ch = getch()) != 'q');
 
+  db_insert(&retval, &handle, mX, mY, mO);
   endwin();
   free(root_windows);
   sqlite3_close(handle);

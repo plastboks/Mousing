@@ -26,6 +26,8 @@
  *
  */
 
+#include <math.h>
 #include <locale.h>
 
 char *commaprint(unsigned long n);
+void exp_inc(int *input, int expo);

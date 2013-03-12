@@ -26,4 +26,3 @@
  *
  */
 
-void interval_increment(int *inteval);

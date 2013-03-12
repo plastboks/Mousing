@@ -50,7 +50,7 @@ void db_table_create(int *retval, sqlite3 **handle) {
 }
 
 
-void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, int mmov) {
+void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, unsigned int mmov) {
 
   char buffr[150];
 
@@ -58,20 +58,21 @@ void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, int mmov) {
   *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
-void db_get_mov_sum(int *retval, sqlite3 **handle, sqlite3_stmt **stmt) {
+void db_get_mov(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, unsigned int *mmov) {
 
   char buffr[150];
-  char timestrA[30];
+  char timestr[30];
   struct tm *local;
   time_t t;
 
   t = time(NULL);
   local = localtime(&t);
+  strftime(timestr, sizeof(timestr), "%Y-%m-%d", local);
 
-  strftime(timestrA, sizeof(timestrA), "%Y-%m-%d", local);
-
-  sprintf(buffr, "select sum(mmov) from mouse where timestamp <= '%s 00:00:00' and timestamp >= '%s 23:59:59'", timestrA, timestrA);
+  sprintf(buffr, "select mmov from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
   if ((*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0))) {
     printf("Selecting from database failed \n");
+  } else if (sqlite3_step(*stmt) == SQLITE_ROW) {
+    *mmov = sqlite3_column_int(*stmt, 0);
   }
 }

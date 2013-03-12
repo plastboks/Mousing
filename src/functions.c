@@ -63,3 +63,11 @@ char *commaprint(unsigned long n) {
 
   return p;
 }
+
+
+void exp_inc(int *input, int expo) {
+  *input += 10;
+  if (*input > pow(2,expo)) {
+    *input = 1;
+  }
+}
