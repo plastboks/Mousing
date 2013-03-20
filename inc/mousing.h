@@ -3,7 +3,7 @@
  *
  * @filename: mousing.h
  *
- * @version: 0.0.7
+ * @version: 0.0.10
  *
  * @date: 2013-02-24
  *

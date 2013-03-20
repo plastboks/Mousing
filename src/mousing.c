@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.8
+ * @version: 0.0.10
  *
  * @date: 2013-02-24
  *
@@ -39,7 +39,7 @@
 #include "sqldb.h"
 #include "functions.h"
 
-#define VERSION 0.08
+#define VERSION 0.0010
 
 
 
