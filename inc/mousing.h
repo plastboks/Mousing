@@ -3,9 +3,9 @@
  *
  * @filename: mousing.h
  *
- * @version: 0.0.10
+ * @version: 0.0.2
  *
- * @date: 2013-02-24
+ * @date: 2013-11-07
  *
  * @description: Mousing main header file.
  *

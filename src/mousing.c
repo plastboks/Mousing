@@ -3,9 +3,9 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.1
+ * @version: 0.0.2
  *
- * @date: 2013-02-24
+ * @date: 2013-11-07
  *
  * @description: Mousing main program file
  *
@@ -27,7 +27,7 @@
  */
 
 #define _BSD_SOURCE
-#define VERSION 0.01
+#define VERSION 0.02
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     refresh();
     my_win = create_newwin(box_height, box_width, sY, sX);
 
-    db_get_mov(&retval, &handle, &stmt, &mO);
+    db_get_mov(&retval, &handle, &stmt, &mO, &mLC, &mRC);
 
     do { 
 
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
         refresh();
 
         if (interval == 1) {
-            db_insert(&retval, &handle, mX, mY, mO);
+            db_insert(&retval, &handle, mX, mY, mO, mLC, mRC);
         }
 
         exp_inc(&interval, 10);
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 
     } while ((ch = getch()) != 'q');
 
-    db_insert(&retval, &handle, mX, mY, mO);
+    db_insert(&retval, &handle, mX, mY, mO, mLC, mRC);
     endwin();
     free(root_windows);
     sqlite3_close(handle);

@@ -3,9 +3,9 @@
  *
  * @filename: functions.h
  *
- * @version: 0.0.1
+ * @version: 0.0.2
  *
- * @date: 2013-02-26
+ * @date: 2013-11-07
  *
  * @description: Mousing functions header file
  *

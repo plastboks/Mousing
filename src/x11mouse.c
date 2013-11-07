@@ -3,9 +3,9 @@
  *
  * @filename: x11mouse.c
  *
- * @version: 0.0.1
+ * @version: 0.0.2
  *
- * @date: 2013-03-04
+ * @date: 2013-11-07
  *
  * @description: Mousings x11mouse sourcecode file
  *
