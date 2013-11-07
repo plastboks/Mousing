@@ -37,6 +37,7 @@
 #include "x11mouse.h"
 #include "ncbox.h"
 #include "sqldb.h"
+#include "mhash.h"
 #include "functions.h"
 
 
