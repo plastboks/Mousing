@@ -55,24 +55,29 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
  *
  * @starty:     int start y pos for text.
  * @staryx:     int start x pos for text.
- * @m_y:        int m_y.
- * @m_x:        int m_x.
- * @mask_r:     int mask_r.
- * @m_o:        int m_o
+ * @mPy:        int mouse pos y.
+ * @mPx:        int mouse pos x.
+ * @mLC:        int mouse left click.
+ * @mRC:        int mouse left click.
+ * @mMov:       int mouse movement.
  *
  * Returns nothing.
  */
-void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, unsigned int m_o)
+void print_data(int starty, int startx, int mPx, int mPy, unsigned int mLC, unsigned int mRC, unsigned int mMov)
 {
     int offset = 20;
     mvprintw(starty, startx + 10, "### Mousing ###");
     mvprintw(starty + 2, startx + 2, "Y-pos:");
     mvprintw(starty + 3, startx + 2, "X-pos:");
     mvprintw(starty + 4, startx + 2, "Movement:");
+    mvprintw(starty + 5, startx + 2, "Left click:");
+    mvprintw(starty + 6, startx + 2, "Right click:");
     attron(COLOR_PAIR(2));
-    mvprintw(starty + 2, startx + offset, "%d ", m_y);
-    mvprintw(starty + 3, startx + offset, "%d ", m_x);
-    mvprintw(starty + 4, startx + offset, "%s ", commaprint(m_o));
+    mvprintw(starty + 2, startx + offset, "%d ", mPy);
+    mvprintw(starty + 3, startx + offset, "%d ", mPx);
+    mvprintw(starty + 4, startx + offset, "%s ", commaprint(mMov));
+    mvprintw(starty + 5, startx + offset, "%d ", mLC);
+    mvprintw(starty + 6, startx + offset, "%d ", mRC);
     attroff(COLOR_PAIR(2));
 }
 

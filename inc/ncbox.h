@@ -33,7 +33,7 @@
 #include <fcntl.h>
 
 WINDOW *create_newwin(int height, int width, int starty, int startx);
-void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, unsigned int m_o);
+void print_data(int starty, int startx, int mPx, int mPy,  unsigned int mLC, unsigned int mRC, unsigned int mMov);
 void destroy_win(WINDOW *local_win);
 void my_setup();
 void my_colors();
