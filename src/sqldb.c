@@ -28,6 +28,14 @@
 
 #include "sqldb.h"
 
+/**
+ * Open database.
+ *
+ * @retval:     int pointer retval.
+ * @handle:     int pointer handle.
+ *
+ * Return nothing.
+ */
 void db_open_database(int *retval, sqlite3 **handle) {
 
     if ((*retval = sqlite3_open("mousing.db", handle))) {
@@ -35,6 +43,14 @@ void db_open_database(int *retval, sqlite3 **handle) {
     }
 }
 
+/**
+ * Create table for database.
+ *
+ * @retval:     int pointer retval.
+ * @handle:     int pointer handle.
+ *
+ * Returns nothing.
+ */
 void db_table_create(int *retval, sqlite3 **handle)
 {
     char id[30] = "id integer primary key";
@@ -48,6 +64,17 @@ void db_table_create(int *retval, sqlite3 **handle)
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
+/**
+ * Insert data into database.
+ *
+ * @retval:     int pointer retval.
+ * @handle:     int pointer handle.
+ * @mposx:      int mouse pos x.
+ * @mposy:      int mouse pos y.
+ * @mmov:       int mouse movement.
+ *
+ * Returns nothing.
+ */
 void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, unsigned int mmov)
 {
     char buffr[150];
@@ -56,6 +83,16 @@ void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, unsigned int
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
+/**
+ * Select from database.
+ *
+ * @retval:     int pointer retval.
+ * @handle:     int pointer handle.
+ * @stmt:       sqlite statement pointer.
+ * @mmov:       int mouse movement.
+ *
+ * Returns nothing.
+ */
 void db_get_mov(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, unsigned int *mmov)
 {
     char buffr[150];

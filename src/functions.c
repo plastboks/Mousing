@@ -28,10 +28,15 @@
 
 #include "functions.h"
 
-/* code found on the interwebs 
+/**
+ * code found on the interwebs 
  * @ http://www.eskimo.com/~scs/c-faq.com/stdio/commaprint.html 
  * this adds a function for printing unsigned integers (longs)
  * with tousands commaseperator.
+ *
+ * @n:      number
+ *
+ * Returns char.
  */
 char *commaprint(unsigned long n) 
 {

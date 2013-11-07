@@ -28,12 +28,25 @@
 
 #include "x11mouse.h"
 
+/**
+ * Error handler.
+ *
+ * @display:    Display pointer.
+ * @event:      XErrorEvent pointer.
+ *
+ * Returns true if errors.
+ */
 static int _XlibErrorHandler(Display *display, XErrorEvent *event)
 {
     fprintf(stderr, "An error occured detecting the mouse position\n");
     return True;
 }
 
+/**
+ * Setup x11 window.
+ *
+ * Returns nothing.
+ */
 void x11read_init()
 {
     int i; 
@@ -48,6 +61,17 @@ void x11read_init()
     }
 }
 
+/**
+ * Read X11 mouse.
+ *
+ * @interval:       int pointer to interval.
+ * @mouse_x:        int pointer mouse x pos.
+ * @mouse_y:        int pointer mouse y pos.
+ * @movement:       int pointer mouse movement.
+ * @mask_return:    int pointer mask_return.
+ *
+ * Returns nothing.
+ */
 void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) 
 {
     int i, mov_y, mov_x;
@@ -55,9 +79,15 @@ void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *move
     int old_mouse_x = *mouse_x;
 
     for (i = 0; i < number_of_screens; i++) {
-        result = XQueryPointer(display, root_windows[i], &window_returned,
-            &window_returned, mouse_x, mouse_y, &win_x, &win_y,
-            mask_return);
+        result = XQueryPointer(display,
+                               root_windows[i],
+                               &window_returned,
+                               &window_returned,
+                               mouse_x,
+                               mouse_y,
+                               &win_x,
+                               &win_y,
+                               mask_return);
         if (result == True) {
             break;
         }

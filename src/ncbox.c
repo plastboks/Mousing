@@ -29,6 +29,16 @@
 #include "ncbox.h"
 #include "functions.h"
 
+/**
+ * Create ncurses window.
+ *
+ * @height:     int height.
+ * @width:      int width.
+ * @starty:     int start y pos.
+ * @startx:     int start x pos.
+ *
+ * Returns WINDOW.
+ */
 WINDOW *create_newwin(int height, int width, int starty, int startx)
 {
     WINDOW *local_win;
@@ -40,6 +50,18 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
     return local_win;
 }
 
+/**
+ * Print window data.
+ *
+ * @starty:     int start y pos for text.
+ * @staryx:     int start x pos for text.
+ * @m_y:        int m_y.
+ * @m_x:        int m_x.
+ * @mask_r:     int mask_r.
+ * @m_o:        int m_o
+ *
+ * Returns nothing.
+ */
 void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, unsigned int m_o)
 {
     int offset = 20;
@@ -54,6 +76,13 @@ void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, u
     attroff(COLOR_PAIR(2));
 }
 
+/**
+ * Destroy window.
+ *
+ * @local_win:      pointer to WINDOW.
+ *
+ * Returns nothing.
+ */
 void destroy_win(WINDOW *local_win) 
 {
     wborder(local_win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
@@ -63,6 +92,11 @@ void destroy_win(WINDOW *local_win)
     refresh();
 }
 
+/**
+ * Setup function for ncurses.
+ *
+ * Returns nothing.
+ */
 void my_setup()
 {
     initscr();
@@ -71,6 +105,11 @@ void my_setup()
     nodelay(stdscr, true);
 }
 
+/**
+ * ncurses color setup.
+ *
+ * Returns nothing.
+ */
 void my_colors()
 {
     if (has_colors() == FALSE) {
