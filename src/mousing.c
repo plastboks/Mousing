@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.10
+ * @version: 0.0.1
  *
  * @date: 2013-02-24
  *
@@ -27,7 +27,7 @@
  */
 
 #define _BSD_SOURCE
-#define VERSION 0.0010
+#define VERSION 0.01
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,6 +38,7 @@
 #include "ncbox.h"
 #include "sqldb.h"
 #include "functions.h"
+
 
 int main(int argc, char *argv[]) 
 {
