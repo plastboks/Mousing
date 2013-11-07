@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
     int hold_time = pow(2,15);
     unsigned int mLC = 0; // mouse left click
     unsigned int mRC = 0; // mouse right click
+    unsigned int mPS = 0; // mouse previous state
     unsigned int mR, mO;
 
     sqlite3_stmt *stmt;
@@ -86,11 +87,16 @@ int main(int argc, char *argv[])
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, sY, sX);
         }
-        if (mR == 1024) {
+        if ((mR == 1024) && (mPS == 0)) {
             mRC++;
+            mPS = 1;
         }
-        if (mR == 256) {
+        if ((mR == 256) && (mPS == 0)) {
             mLC++;
+            mPS = 1;
+        }
+        if (mR == 0) {
+            mPS = 0;
         }
         print_data(sY, sX, mY, mX, mLC, mRC, mO);
         refresh();
