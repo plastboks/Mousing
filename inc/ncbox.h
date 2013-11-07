@@ -32,7 +32,6 @@
 #include <ncurses.h>
 #include <fcntl.h>
 
-
 WINDOW *create_newwin(int height, int width, int starty, int startx);
 void print_data(int starty, int startx, int m_y, int m_x, unsigned int mask_r, unsigned int m_o);
 void destroy_win(WINDOW *local_win);

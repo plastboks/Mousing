@@ -28,63 +28,60 @@
 
 #include "x11mouse.h"
 
-
-static int _XlibErrorHandler(Display *display, XErrorEvent *event) {
+static int _XlibErrorHandler(Display *display, XErrorEvent *event)
+{
     fprintf(stderr, "An error occured detecting the mouse position\n");
     return True;
 }
 
-
-void x11read_init() {
-  int i; 
-  XSetErrorHandler(_XlibErrorHandler);
-  display = XOpenDisplay(NULL);
-  assert(display);
-  number_of_screens = XScreenCount(display);
-  root_windows = malloc(sizeof(Window) * number_of_screens);
-  
-  for (i = 0; i < number_of_screens; i++) {
-    root_windows[i] = XRootWindow(display, i);
-  }
+void x11read_init()
+{
+    int i; 
+    XSetErrorHandler(_XlibErrorHandler);
+    display = XOpenDisplay(NULL);
+    assert(display);
+    number_of_screens = XScreenCount(display);
+    root_windows = malloc(sizeof(Window) * number_of_screens);
+    
+    for (i = 0; i < number_of_screens; i++) {
+        root_windows[i] = XRootWindow(display, i);
+    }
 }
 
+void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) 
+{
+    int i, mov_y, mov_x;
+    int old_mouse_y = *mouse_y;
+    int old_mouse_x = *mouse_x;
 
-void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) {
-
-  int i, mov_y, mov_x;
-  int old_mouse_y = *mouse_y;
-  int old_mouse_x = *mouse_x;
-
-  for (i = 0; i < number_of_screens; i++) {
-    result = XQueryPointer(display, root_windows[i], &window_returned,
-      &window_returned, mouse_x, mouse_y, &win_x, &win_y,
-      mask_return);
-    if (result == True) {
-      break;
+    for (i = 0; i < number_of_screens; i++) {
+        result = XQueryPointer(display, root_windows[i], &window_returned,
+            &window_returned, mouse_x, mouse_y, &win_x, &win_y,
+            mask_return);
+        if (result == True) {
+            break;
+        }
     }
-  }
 
-  if (*interval != 0) {
-     
-    if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
-      if (old_mouse_x > *mouse_x) {
-        mov_x = old_mouse_x - *mouse_x;
-      } else {
-        mov_x = *mouse_x - old_mouse_x;
-      }
+    if (*interval != 0) {
+         
+        if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
+            if (old_mouse_x > *mouse_x) {
+                mov_x = old_mouse_x - *mouse_x;
+            } else {
+                mov_x = *mouse_x - old_mouse_x;
+            }
 
-      if (old_mouse_y > *mouse_y) {
-        mov_y = old_mouse_y - *mouse_y;
-      } else {
-        mov_y = *mouse_y - old_mouse_y;  
-      }
-      *movement += mov_y + mov_x;
+            if (old_mouse_y > *mouse_y) {
+                mov_y = old_mouse_y - *mouse_y;
+            } else {
+                mov_y = *mouse_y - old_mouse_y;
+            }
+            *movement += mov_y + mov_x;
+        }
     }
-  }
-  
-  if (result != True) {
-    fprintf(stderr, "No mouse found.\n");
-  }
 
+    if (result != True) {
+        fprintf(stderr, "No mouse found.\n");
+    }
 }
-
