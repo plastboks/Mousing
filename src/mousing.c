@@ -52,7 +52,8 @@ int main(int argc, char *argv[])
     unsigned int mLC = 0; // mouse left click
     unsigned int mRC = 0; // mouse right click
     unsigned int mPS = 0; // mouse previous state
-    unsigned int mR, mO;
+    unsigned int mR = 0;
+    unsigned int mO = 0; //mouse movement;
 
     sqlite3_stmt *stmt;
     sqlite3 *handle;
