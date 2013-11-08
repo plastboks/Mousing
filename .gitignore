@@ -2,3 +2,5 @@
 mousing
 mousing.db*
 /debug/X11.pointer
+
+*.swp
