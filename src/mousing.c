@@ -37,6 +37,7 @@
 #include "x11mouse.h"
 #include "ncbox.h"
 #include "sqldb.h"
+#include "mhash.h"
 #include "functions.h"
 
 
@@ -99,7 +100,7 @@ int main(int argc, char *argv[])
         if (mR == 0) {
             mPS = 0;
         }
-        print_data(sY, sX, mY, mX, mLC, mRC, mO);
+        print_data(sY, sX, mX, mY, mLC, mRC, mO);
         refresh();
 
         if (interval == 1) {
