@@ -68,14 +68,14 @@ void print_data(int starty, int startx, int mPx, int mPy, unsigned int mLC, unsi
     int offset = 20;
     mvprintw(starty, startx + 10, "### Mousing ###");
     mvprintw(starty + 2, startx + 2, "Pos:");
-    mvprintw(starty + 4, startx + 2, "Movement:");
-    mvprintw(starty + 6, startx + 2, "Left click:");
-    mvprintw(starty + 7, startx + 2, "Right click:");
+    mvprintw(starty + 3, startx + 2, "Movement:");
+    mvprintw(starty + 4, startx + 2, "Left click:");
+    mvprintw(starty + 5, startx + 2, "Right click:");
     attron(COLOR_PAIR(2));
     mvprintw(starty + 2, startx + offset, "(%04d,%04d)", mPx, mPy);
-    mvprintw(starty + 4, startx + offset, "%s ", commaprint(mMov));
-    mvprintw(starty + 6, startx + offset, "%d ", mLC);
-    mvprintw(starty + 7, startx + offset, "%d ", mRC);
+    mvprintw(starty + 3, startx + offset, "%s ", commaprint(mMov));
+    mvprintw(starty + 4, startx + offset, "%d ", mLC);
+    mvprintw(starty + 5, startx + offset, "%d ", mRC);
     attroff(COLOR_PAIR(2));
 }
 

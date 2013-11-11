@@ -44,14 +44,6 @@
  */
 void mouse_hash(char *mhash, int mposx, int mposy, unsigned int mmov, unsigned int mlc, unsigned int mrc)
 {
-    unsigned char hash[SHA_DIGEST_LENGTH];
-    char buffr[300];
-    int qc;
-
-    qc = sprintf(buffr, "%d,%d,%d,%d,%d", mposx, mposy, mmov, mlc, mrc);
-    size_t length = sizeof(buffr);
-    
-    SHA1(buffr, length, hash);
-
-    //*mhash = hash;
+    char buffr[64];
+    sprintf(buffr, "%d,%d,%d,%d,%d", mposx, mposy, mmov, mlc, mrc);
 }
