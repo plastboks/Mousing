@@ -72,7 +72,12 @@ void x11read_init()
  *
  * Returns nothing.
  */
-void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) 
+void x11read_mouse(int *interval,
+                   int *mouse_x,
+                   int *mouse_y,
+                   unsigned int *movement,
+                   unsigned int *mask_return
+                   )
 {
     int i, mov_y, mov_x;
     int old_mouse_y = *mouse_y;
