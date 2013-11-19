@@ -44,7 +44,7 @@ struct {
     int pos[2];            /* pos (x,y) */
     int old_pos[2];        /* old pos (x,y) */
     unsigned int click[3];          /* clicks (left,middle,right) */
-    unsigned int old_clicks[3];     /* clicks (left,middle,right) */
+    unsigned int old_click[3];     /* clicks (left,middle,right) */
     unsigned int state[2];          /* state (current, previous) */
     unsigned int mov;               /* movement */
 } mouse = {
@@ -59,19 +59,19 @@ struct {
 
 int main(int argc, char *argv[]) 
 {
-    WINDOW *my_win;
-
     int retval;
     int oldlines, oldcols, sX, sY, ch;
     int interval = 0;
     int box_height = 10, box_width = 35; 
     int hold_time = pow(2,15);
 
+    WINDOW *my_win;
     sqlite3_stmt *stmt;
     sqlite3 *handle;
 
     x11read_init();
 
+    /* open database and create/check for tables */
     db_open_database(&retval, &handle);
     db_table_create(&retval, &handle);
 
@@ -87,16 +87,23 @@ int main(int argc, char *argv[])
     refresh();
     my_win = create_newwin(box_height, box_width, sY, sX);
 
+    /* read previous data from database, if exists */
     db_get_mov(&retval, &handle, &stmt, &mouse.mov, &mouse.click[0], &mouse.click[2]);
 
     do { 
-
+        /* Read from mouse */
         x11read_mouse(&interval,
                       &mouse.pos[0],
                       &mouse.pos[1],
                       &mouse.mov,
                       &mouse.state[0]
                       );
+
+        /**
+         * Redraw window if resized.
+         * This should be split into another file, and
+         * only run/checked if window changes.
+         */
         if ((oldlines != LINES) || (oldcols != COLS)) {
             sY = (LINES - box_height) / 2; 
             sX = (COLS - box_width) / 2;
@@ -105,17 +112,27 @@ int main(int argc, char *argv[])
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, sY, sX);
         }
+
+        /* right click */
         if ((mouse.state[0] == 1024) && (mouse.state[1] == 0)) {
             mouse.click[2]++;
             mouse.state[1] = 1;
         }
+        /* left click */
         if ((mouse.state[0] == 256) && (mouse.state[1] == 0)) {
             mouse.click[0]++;
+            mouse.state[1] = 1;
+        }
+        /* middle click */
+        if ((mouse.state[0] == 512) && (mouse.state[1] == 0)) {
+            mouse.click[1]++;
             mouse.state[1] = 1;
         }
         if (mouse.state[0] == 0) {
             mouse.state[1] = 0;
         }
+
+        /* Print data to window */
         print_data(sY,
                    sX,
                    mouse.pos[0],
@@ -125,8 +142,15 @@ int main(int argc, char *argv[])
                    mouse.mov
                    );
         refresh();
-
-        if (interval == 1) {
+      
+        /**
+         * Update if mouse moves.
+         * Needs to update when mouse only clicks also
+         */
+        if ((mouse.old_pos[0] != mouse.pos[0])
+            && (mouse.old_pos[1] != mouse.pos[1]))
+        {
+            /* Insert data into database  */
             db_insert(&retval,
                       &handle,
                       mouse.pos[0],
@@ -136,12 +160,19 @@ int main(int argc, char *argv[])
                       mouse.click[2]
                       );
         }
+        
+        /* update mouse.pos and mouse.click with old */
+        mouse.old_pos[0] = mouse.pos[0];
+        mouse.old_pos[1] = mouse.pos[1];
+        mouse.old_click[0] = mouse.click[0];
+        mouse.old_click[1] = mouse.click[1];
+        mouse.old_click[2] = mouse.click[2];
 
-        exp_inc(&interval, 10);
+        /* Sleep for a while, to prevent CPU load */
         usleep(hold_time);
-
     } while ((ch = getch()) != 'q');
 
+    /* Final save to the database */
     db_insert(&retval,
               &handle,
               mouse.pos[0],
@@ -150,6 +181,8 @@ int main(int argc, char *argv[])
               mouse.click[0],
               mouse.click[2]
               );
+
+    /* End routine */
     endwin();
     free(root_windows);
     sqlite3_close(handle);
