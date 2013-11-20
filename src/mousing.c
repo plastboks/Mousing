@@ -41,12 +41,12 @@
 #include "functions.h"
 
 struct {
-    int pos[2];            /* pos (x,y) */
-    int old_pos[2];        /* old pos (x,y) */
+    int pos[2];                     /* pos (x,y) */
+    int old_pos[2];                 /* old pos (x,y) */
     unsigned int click[3];          /* clicks (left,middle,right) */
-    unsigned int old_click[3];     /* clicks (left,middle,right) */
+    unsigned int old_click[3];      /* clicks (left,middle,right) */
     unsigned int state[2];          /* state (current, previous) */
-    unsigned int mov;               /* movement */
+    unsigned int mov[2];            /* movement (current, previous) */ 
 } mouse = {
     /* set zero values */
     {0, 0},
@@ -54,16 +54,15 @@ struct {
     {0, 0},
     {0, 0, 0},
     {0, 0},
-    0
+    {0, 0}
 };
 
 int main(int argc, char *argv[]) 
 {
     int retval;
     int oldlines, oldcols, sX, sY, ch;
-    int interval = 0;
     int box_height = 10, box_width = 35; 
-    int hold_time = pow(2,15);
+    int sleep_time = pow(2,15);
 
     WINDOW *my_win;
     sqlite3_stmt *stmt;
@@ -88,14 +87,19 @@ int main(int argc, char *argv[])
     my_win = create_newwin(box_height, box_width, sY, sX);
 
     /* read previous data from database, if exists */
-    db_get_mov(&retval, &handle, &stmt, &mouse.mov, &mouse.click[0], &mouse.click[2]);
+    db_get_mov(&retval,
+               &handle,
+               &stmt,
+               &mouse.mov[0],
+               &mouse.click[0],
+               &mouse.click[2]
+               );
 
     do { 
         /* Read from mouse */
-        x11read_mouse(&interval,
-                      &mouse.pos[0],
+        x11read_mouse(&mouse.pos[0],
                       &mouse.pos[1],
-                      &mouse.mov,
+                      &mouse.mov[0],
                       &mouse.state[0]
                       );
 
@@ -139,8 +143,10 @@ int main(int argc, char *argv[])
                    mouse.pos[1],
                    mouse.click[0],
                    mouse.click[2],
-                   mouse.mov
+                   mouse.mov[0]
                    );
+
+        /* refresh the ncurses window */
         refresh();
       
         /**
@@ -155,13 +161,14 @@ int main(int argc, char *argv[])
                       &handle,
                       mouse.pos[0],
                       mouse.pos[1],
-                      mouse.mov,
+                      mouse.mov[0],
                       mouse.click[0],
                       mouse.click[2]
                       );
         }
         
         /* update mouse.pos and mouse.click with old */
+        mouse.mov[1] = mouse.mov[0];
         mouse.old_pos[0] = mouse.pos[0];
         mouse.old_pos[1] = mouse.pos[1];
         mouse.old_click[0] = mouse.click[0];
@@ -169,7 +176,8 @@ int main(int argc, char *argv[])
         mouse.old_click[2] = mouse.click[2];
 
         /* Sleep for a while, to prevent CPU load */
-        usleep(hold_time);
+        usleep(sleep_time);
+
     } while ((ch = getch()) != 'q');
 
     /* Final save to the database */
@@ -177,7 +185,7 @@ int main(int argc, char *argv[])
               &handle,
               mouse.pos[0],
               mouse.pos[1],
-              mouse.mov,
+              mouse.mov[0],
               mouse.click[0],
               mouse.click[2]
               );
