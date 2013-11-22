@@ -64,6 +64,11 @@ int main(int argc, char *argv[])
     int box_height = 10, box_width = 35; 
     int sleep_time = pow(2,15);
 
+    /* time spesifict vars */
+    char timestr[30];
+    struct tm *local;
+    time_t t;
+
     WINDOW *my_win;
     sqlite3_stmt *stmt;
     sqlite3 *handle;
@@ -179,6 +184,17 @@ int main(int argc, char *argv[])
         mouse.old_click[0] = mouse.click[0];
         mouse.old_click[1] = mouse.click[1];
         mouse.old_click[2] = mouse.click[2];
+
+        /** 
+         * Check time.
+         * If the time is 00:00, reset the counters
+         */
+        t = time(NULL);
+        local = localtime(&t);
+        strftime(timestr, sizeof(timestr), "%H:%M", local);
+        /**
+         * Here be some fancy time checking...
+         */
 
         /* Sleep for a while, to prevent CPU load */
         usleep(sleep_time);
