@@ -151,10 +151,15 @@ int main(int argc, char *argv[])
       
         /**
          * Update if mouse moves.
-         * Needs to update when mouse only clicks also
+         * 
+         * This check is a bit nasty. Might consider improving it.
          */
-        if ((mouse.old_pos[0] != mouse.pos[0])
+        if (((mouse.old_pos[0] != mouse.pos[0])
             && (mouse.old_pos[1] != mouse.pos[1]))
+            || (mouse.old_click[0] != mouse.click[0])
+            || (mouse.old_click[1] != mouse.click[1])
+            || (mouse.old_click[2] != mouse.click[2])
+            )
         {
             /* Insert data into database  */
             db_insert(&retval,
