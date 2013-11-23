@@ -1,5 +1,5 @@
 Mousing Todos
-=======
+=============
 
   * Track scrolling use ?
     * This seems to need another X11 library ... ?
@@ -8,6 +8,11 @@ Mousing Todos
         * Use structs ? 
         * Use arrays ?
   * Reset the counters every midnight. This to prevent counters from previous day to leak onto the next day.
+
+Known bugs
+==========
+
+  * Every time the program is opened the movement counter seems to increment by 1919...
 
 
 Mousing Future tech

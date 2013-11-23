@@ -100,6 +100,23 @@ int main(int argc, char *argv[])
                &mouse.click[2]
                );
 
+    /**
+     * set the old counters to be the same as
+     * the current, before starting the never
+     * ending loop that follows
+     *
+     * This is the first out of two times this
+     * mass update sequence happens. It might
+     * be a good idea to branch this sequence
+     * of to a place never to be seen again...
+     */
+    mouse.mov[1] = mouse.mov[0];
+    mouse.old_pos[0] = mouse.pos[0];
+    mouse.old_pos[1] = mouse.pos[1];
+    mouse.old_click[0] = mouse.click[0];
+    mouse.old_click[1] = mouse.click[1];
+    mouse.old_click[2] = mouse.click[2];
+
     do { 
         /* Read from mouse */
         x11read_mouse(&mouse.pos[0],
