@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -208,10 +209,16 @@ int main(int argc, char *argv[])
          */
         t = time(NULL);
         local = localtime(&t);
-        strftime(timestr, sizeof(timestr), "%H:%M", local);
+        strftime(timestr, sizeof(timestr), "%H%M", local);
         /**
          * Here be some fancy time checking...
-         */
+        if (strcmp(timestr, "0000")) { // does not work!
+            mouse.mov[0] = 0;
+            mouse.click[0] = 0;
+            mouse.click[1] = 0;
+            mouse.click[2] = 0;
+        }
+        */
 
         /* Sleep for a while, to prevent CPU load */
         usleep(sleep_time);
