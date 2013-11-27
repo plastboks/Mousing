@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
     /* time spesifict vars */
     char timestr[30];
-    char zero_time[30] = {"0000"};
+    //char zero_time[30] = {"0000"};
     struct tm *local;
     time_t t;
 
@@ -213,13 +213,15 @@ int main(int argc, char *argv[])
         strftime(timestr, sizeof(timestr), "%H%M", local);
         /**
          * Here be some fancy time checking...
-         */
+         * Does not work. Need fixing!
+         *
         if (timestr == zero_time) {
             mouse.mov[0] = 0;
             mouse.click[0] = 0;
             mouse.click[1] = 0;
             mouse.click[2] = 0;
         }
+        */
 
         /* Sleep for a while, to prevent CPU load */
         usleep(sleep_time);
