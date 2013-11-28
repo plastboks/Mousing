@@ -214,6 +214,7 @@ int main(int argc, char *argv[])
         /**
          * Here be some fancy time checking...
          * Does not work. Need fixing!
+         * Compare time to string, or find better method.
          *
         if (timestr == zero_time) {
             mouse.mov[0] = 0;
