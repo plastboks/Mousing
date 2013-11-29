@@ -1,5 +1,5 @@
 /*
- * Mousing main sourcefile.
+ * Mousing main source file.
  *
  * @filename: mousing.c
  *
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     int box_height = 10, box_width = 35; 
     int sleep_time = pow(2,15);
 
-    /* time spesifict vars */
+    /* time specific vars */
     char timestr[30];
     //char zero_time[30] = {"0000"};
     struct tm *local;
@@ -93,6 +93,18 @@ int main(int argc, char *argv[])
     refresh();
     my_win = create_newwin(box_height, box_width, sY, sX);
 
+    /**
+     * Do one initial reading and populate the integers
+     * variables before getting the database information.
+     * This to prevent the awkward movement incrementation
+     * on every startup.
+     */
+    x11read_mouse(&mouse.pos[0],
+                  &mouse.pos[1],
+                  &mouse.mov[0],
+                  &mouse.state[0]
+                  );
+
     /* read previous data from database, if exists */
     db_get_mov(&retval,
                &handle,
@@ -101,23 +113,6 @@ int main(int argc, char *argv[])
                &mouse.click[0],
                &mouse.click[2]
                );
-
-    /**
-     * set the old counters to be the same as
-     * the current, before starting the never
-     * ending loop that follows
-     *
-     * This is the first out of two times this
-     * mass update sequence happens. It might
-     * be a good idea to branch this sequence
-     * of to a place never to be seen again...
-     */
-    mouse.mov[1] = mouse.mov[0];
-    mouse.old_pos[0] = mouse.pos[0];
-    mouse.old_pos[1] = mouse.pos[1];
-    mouse.old_click[0] = mouse.click[0];
-    mouse.old_click[1] = mouse.click[1];
-    mouse.old_click[2] = mouse.click[2];
 
     do { 
         /* Read from mouse */

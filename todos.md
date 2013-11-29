@@ -12,8 +12,6 @@ Mousing Todos
 Known bugs
 ==========
 
-  * Every time the program is opened the movement counter seems to increment by 1919...
-
 
 Mousing Future tech
 ===================
