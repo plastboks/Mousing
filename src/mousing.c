@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
     /* time specific vars */
     char timestr[30];
-    //char zero_time[30] = {"0000"};
+    char zero_time[30] = {"00:00:00"};
     struct tm *local;
     time_t t;
 
@@ -115,6 +115,14 @@ int main(int argc, char *argv[])
                );
 
     do { 
+
+        /** 
+         * Get time
+         */
+        t = time(NULL);
+        local = localtime(&t);
+        strftime(timestr, sizeof(timestr), "%H:%M:%S", local);
+
         /* Read from mouse */
         x11read_mouse(&mouse.pos[0],
                       &mouse.pos[1],
@@ -167,6 +175,18 @@ int main(int argc, char *argv[])
 
         /* refresh the ncurses window */
         refresh();
+
+        /**
+         * Here be some fancy time checking...
+         * If the time is zero_time, reset all
+         * counters, (day change etc.)
+         */
+        if (!strcmp(timestr, zero_time)) {
+            mouse.mov[0] = 0;
+            mouse.click[0] = 0;
+            mouse.click[1] = 0;
+            mouse.click[2] = 0;
+        }
       
         /**
          * Update if mouse moves.
@@ -198,26 +218,6 @@ int main(int argc, char *argv[])
         mouse.old_click[0] = mouse.click[0];
         mouse.old_click[1] = mouse.click[1];
         mouse.old_click[2] = mouse.click[2];
-
-        /** 
-         * Check time.
-         * If the time is 00:00, reset the counters
-         */
-        t = time(NULL);
-        local = localtime(&t);
-        strftime(timestr, sizeof(timestr), "%H%M", local);
-        /**
-         * Here be some fancy time checking...
-         * Does not work. Need fixing!
-         * Compare time to string, or find better method.
-         *
-        if (timestr == zero_time) {
-            mouse.mov[0] = 0;
-            mouse.click[0] = 0;
-            mouse.click[1] = 0;
-            mouse.click[2] = 0;
-        }
-        */
 
         /* Sleep for a while, to prevent CPU load */
         usleep(sleep_time);

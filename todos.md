@@ -7,7 +7,6 @@ Mousing Todos
       * Try to find the best datastorage 'structure' for the main mouse properties.
         * Use structs ? 
         * Use arrays ?
-  * Reset the counters every midnight. This to prevent counters from previous day to leak onto the next day.
 
 Known bugs
 ==========
