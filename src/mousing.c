@@ -61,8 +61,10 @@ struct {
 int main(int argc, char *argv[]) 
 {
     int retval;
-    int oldlines, oldcols, sX, sY, ch;
-    int box_height = 10, box_width = 35; 
+    /* (x,y) cords for the ncurses box */
+    int cords[2];
+    int oldlines, oldcols, ch;
+    int box_height = 8, box_width = 32; 
     int sleep_time = pow(2,15);
 
     /* time specific vars */
@@ -84,14 +86,14 @@ int main(int argc, char *argv[])
     my_setup();
     my_colors();
 
-    sY = (LINES - box_height) / 2; 
-    sX = (COLS - box_width) / 2;
+    cords[0] = (COLS - box_width) / 2;
+    cords[1] = (LINES - box_height) / 2; 
     oldlines = LINES;
     oldcols = COLS;
 
     printw("Press Q to exit. Version: %.2f", VERSION);
     refresh();
-    my_win = create_newwin(box_height, box_width, sY, sX);
+    my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
 
     /**
      * Do one initial reading and populate the integers
@@ -136,12 +138,12 @@ int main(int argc, char *argv[])
          * only run/checked if window changes.
          */
         if ((oldlines != LINES) || (oldcols != COLS)) {
-            sY = (LINES - box_height) / 2; 
-            sX = (COLS - box_width) / 2;
+            cords[1] = (LINES - box_height) / 2; 
+            cords[0] = (COLS - box_width) / 2;
             oldlines = LINES;
             oldcols = COLS;
             destroy_win(my_win);
-            my_win = create_newwin(box_height, box_width, sY, sX);
+            my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
         }
 
         /* right click */
@@ -164,8 +166,8 @@ int main(int argc, char *argv[])
         }
 
         /* Print data to window */
-        print_data(sY,
-                   sX,
+        print_data(cords[0],
+                   cords[1],
                    mouse.pos[0],
                    mouse.pos[1],
                    mouse.click[0],

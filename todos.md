@@ -1,6 +1,5 @@
 Mousing Todos
 =============
-
   * Track scrolling use ?
     * This seems to need another X11 library ... ?
   * Clean up code (refactor), and merge variables into arrays etc.
@@ -14,6 +13,5 @@ Known bugs
 
 Mousing Future tech
 ===================
-
   * Export data and generate som pretty graphs/plots.
   * Make better use of ncurses with centered information, and panels (date, help, menus).
