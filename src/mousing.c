@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.2
+ * @version: 0.0.3
  *
  * @date: 2013-11-07
  *
@@ -27,7 +27,7 @@
  */
 
 #define _BSD_SOURCE
-#define VERSION 0.02
+#define VERSION 0.03
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     /* (x,y) cords for the ncurses box */
     int cords[2];
     int oldlines, oldcols, ch;
-    int box_height = 8, box_width = 32; 
+    int box_height = 9, box_width = 32; 
     int sleep_time = pow(2,15);
 
     /* time specific vars */
@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
                &stmt,
                &mouse.mov[0],
                &mouse.click[0],
+               &mouse.click[1],
                &mouse.click[2]
                );
 
@@ -171,6 +172,7 @@ int main(int argc, char *argv[])
                    mouse.pos[0],
                    mouse.pos[1],
                    mouse.click[0],
+                   mouse.click[1],
                    mouse.click[2],
                    mouse.mov[0]
                    );
@@ -209,6 +211,7 @@ int main(int argc, char *argv[])
                       mouse.pos[1],
                       mouse.mov[0],
                       mouse.click[0],
+                      mouse.click[1],
                       mouse.click[2]
                       );
         }
@@ -233,6 +236,7 @@ int main(int argc, char *argv[])
               mouse.pos[1],
               mouse.mov[0],
               mouse.click[0],
+              mouse.click[1],
               mouse.click[2]
               );
 

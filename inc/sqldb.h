@@ -33,5 +33,18 @@
 
 void db_open_database(int *retval, sqlite3 **handle);
 void db_table_create(int *retval, sqlite3 **handle);
-void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, unsigned int mmov, unsigned int mlc, unsigned int mrc);
-void db_get_mov(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, unsigned int *mmov, unsigned int *mlc, unsigned int *mrc);
+void db_insert(int *retval,
+               sqlite3 **handle,
+               int mposx, int mposy,
+               unsigned int mmov,
+               unsigned int mlc,
+               unsigned int mmc,
+               unsigned int mrc);
+void db_get_mov(int *retval,
+                sqlite3 **handle,
+                sqlite3_stmt **stmt,
+                unsigned int *mmov,
+                unsigned int *mlc,
+                unsigned int *mmc,
+                unsigned int *mrc
+                );

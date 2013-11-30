@@ -63,7 +63,14 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
  *
  * Returns nothing.
  */
-void print_data(int startx, int starty, int mPx, int mPy, unsigned int mLC, unsigned int mRC, unsigned int mMov)
+void print_data(int startx,
+                int starty,
+                int mPx,
+                int mPy,
+                unsigned int mLC,
+                unsigned int mMC,
+                unsigned int mRC,
+                unsigned int mMov)
 {
     int offset = 18;
     mvprintw(starty, startx + 8, "### Mousing ###");
@@ -72,13 +79,15 @@ void print_data(int startx, int starty, int mPx, int mPy, unsigned int mLC, unsi
     mvprintw(starty + 2, startx + 2, "Pos:");
     mvprintw(starty + 3, startx + 2, "Movement:");
     mvprintw(starty + 4, startx + 2, "Left click:");
-    mvprintw(starty + 5, startx + 2, "Right click:");
+    mvprintw(starty + 5, startx + 2, "Middle click:");
+    mvprintw(starty + 6, startx + 2, "Right click:");
     /* shift to cyan colors */
     attron(COLOR_PAIR(2));
     mvprintw(starty + 2, startx + offset, "(%04d,%04d)", mPx, mPy);
     mvprintw(starty + 3, startx + offset, "%s ", commaprint(mMov));
     mvprintw(starty + 4, startx + offset, "%d ", mLC);
-    mvprintw(starty + 5, startx + offset, "%d ", mRC);
+    mvprintw(starty + 5, startx + offset, "%d ", mMC);
+    mvprintw(starty + 6, startx + offset, "%d ", mRC);
     /* turn off colors */
     attroff(COLOR_PAIR(2));
 }

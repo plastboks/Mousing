@@ -3,9 +3,9 @@
  *
  * @filename: sqldb.c
  *
- * @version: 0.0.2
+ * @version: 0.0.3
  *
- * @date: 2013-11-07
+ * @date: 2013-11-30
  *
  * @description: Mousings sqllite database storage source file.
  *
@@ -61,12 +61,14 @@ void db_table_create(int *retval, sqlite3 **handle)
     char mposx[30] = "mposx integer";
     char mposy[30] = "mposy integer";
     char mmov[30] = "mmov integer";
-    char mlc[30] = "mlc interger";
-    char mrc[30] = "mrc interger integer";
+    char mlc[30] = "mlc interger"; // mouse left click.
+    char mmc[30] = "mmc interger";
+    char mrc[30] = "mrc interger integer"; //mouse right click.
     char times[50] = "timestamp datetime default current_timestamp";
     char buffr[300];
 
-    sprintf(buffr, "create table if not exists mouse (%s, %s, %s, %s, %s, %s, %s)", id, mposx, mposy, mmov, mlc, mrc, times);
+    sprintf(buffr, "create table if not exists mouse (%s, %s, %s, %s, %s, %s, %s, %s)",
+            id, mposx, mposy, mmov, mlc, mmc, mrc, times);
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
@@ -83,11 +85,19 @@ void db_table_create(int *retval, sqlite3 **handle)
  *
  * Returns nothing.
  */
-void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, unsigned int mmov, unsigned int mlc, unsigned int mrc)
+void db_insert(int *retval,
+               sqlite3 **handle,
+               int mposx,
+               int mposy,
+               unsigned int mmov,
+               unsigned int mlc,
+               unsigned int mmc,
+               unsigned int mrc)
 {
     char buffr[150];
 
-    sprintf(buffr, "insert into mouse (mposx, mposy, mmov, mlc, mrc) values ('%d', '%d', '%d', '%d', '%d')", mposx, mposy, mmov, mlc, mrc);
+    sprintf(buffr, "insert into mouse (mposx, mposy, mmov, mlc, mmc, mrc) values ('%d', '%d', '%d', '%d', '%d', '%d')",
+            mposx, mposy, mmov, mlc, mmc, mrc);
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
@@ -103,7 +113,13 @@ void db_insert(int *retval, sqlite3 **handle, int mposx, int mposy, unsigned int
  *
  * Returns nothing.
  */
-void db_get_mov(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, unsigned int *mmov, unsigned int *mlc, unsigned int *mrc)
+void db_get_mov(int *retval,
+                sqlite3 **handle,
+                sqlite3_stmt **stmt,
+                unsigned int *mmov,
+                unsigned int *mlc,
+                unsigned int *mmc,
+                unsigned int *mrc)
 {
     char buffr[150];
     char timestr[30];
@@ -114,13 +130,14 @@ void db_get_mov(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, unsigned int
     local = localtime(&t);
     strftime(timestr, sizeof(timestr), "%Y-%m-%d", local);
 
-    sprintf(buffr, "select mmov, mlc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
+    sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
 
     if ((*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0))) {
         printf("Selecting from database failed \n");
     } else if (sqlite3_step(*stmt) == SQLITE_ROW) {
         *mmov = sqlite3_column_int(*stmt, 0);
         *mlc = sqlite3_column_int(*stmt, 1);
-        *mrc = sqlite3_column_int(*stmt, 2);
+        *mmc = sqlite3_column_int(*stmt, 2);
+        *mrc = sqlite3_column_int(*stmt, 3);
     }
 }
