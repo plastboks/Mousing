@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
          */
         t = time(NULL);
         local = localtime(&t);
-        strftime(timestr, sizeof(timestr), "%H:%M:%S", local);
+        strftime(timestr, sizeof(timestr), "%T", local);
 
         /* Read from mouse */
         x11read_mouse(&mouse.pos[0],
@@ -190,6 +190,13 @@ int main(int argc, char *argv[])
             mouse.click[0] = 0;
             mouse.click[1] = 0;
             mouse.click[2] = 0;
+
+            /* redraw window and clean up garbage */
+            destroy_win(my_win);
+            my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
+
+            /* take a small break */
+            usleep(pow(2,20));
         }
       
         /**
@@ -224,7 +231,7 @@ int main(int argc, char *argv[])
         mouse.old_click[1] = mouse.click[1];
         mouse.old_click[2] = mouse.click[2];
 
-        /* Sleep for a while, to prevent CPU load */
+        /* Sleep for a while, to prevent high CPU load */
         usleep(sleep_time);
 
     } while ((ch = getch()) != 'q');
