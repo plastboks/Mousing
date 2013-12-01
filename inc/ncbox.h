@@ -33,13 +33,9 @@
 #include <fcntl.h>
 
 WINDOW *create_newwin(int height, int width, int starty, int startx);
-void print_data(int startx,
-                int starty,
-                int mPx,
-                int mPy,
-                unsigned int mLC,
-                unsigned int mMC,
-                unsigned int mRC,
+void print_data(int cords[],
+                int pos[],
+                unsigned int clicks[],
                 unsigned int mMov);
 void destroy_win(WINDOW *local_win);
 void my_setup();

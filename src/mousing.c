@@ -112,9 +112,7 @@ int main(int argc, char *argv[])
                &handle,
                &stmt,
                &mouse.mov[0],
-               &mouse.click[0],
-               &mouse.click[1],
-               &mouse.click[2]
+               mouse.click
                );
 
     do { 
@@ -167,13 +165,9 @@ int main(int argc, char *argv[])
         }
 
         /* Print data to window */
-        print_data(cords[0],
-                   cords[1],
-                   mouse.pos[0],
-                   mouse.pos[1],
-                   mouse.click[0],
-                   mouse.click[1],
-                   mouse.click[2],
+        print_data(cords,
+                   mouse.pos,
+                   mouse.click,
                    mouse.mov[0]
                    );
 
@@ -214,12 +208,9 @@ int main(int argc, char *argv[])
             /* Insert data into database  */
             db_insert(&retval,
                       &handle,
-                      mouse.pos[0],
-                      mouse.pos[1],
+                      mouse.pos,
                       mouse.mov[0],
-                      mouse.click[0],
-                      mouse.click[1],
-                      mouse.click[2]
+                      mouse.click
                       );
         }
         
@@ -239,12 +230,9 @@ int main(int argc, char *argv[])
     /* Final save to the database */
     db_insert(&retval,
               &handle,
-              mouse.pos[0],
-              mouse.pos[1],
+              mouse.pos,
               mouse.mov[0],
-              mouse.click[0],
-              mouse.click[1],
-              mouse.click[2]
+              mouse.click
               );
 
     /* End routine */

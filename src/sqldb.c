@@ -77,27 +77,22 @@ void db_table_create(int *retval, sqlite3 **handle)
  *
  * @retval:     int pointer retval.
  * @handle:     int pointer handle.
- * @mposx:      int mouse pos x.
- * @mposy:      int mouse pos y.
+ * @pos[]:      int [x,y] mouse position.
  * @mmov:       int mouse movement.
- * @mlc:        int mouse left clicks.
- * @mrc:        int mouse right clicks.
+ * @clicks[]:   int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
 void db_insert(int *retval,
                sqlite3 **handle,
-               int mposx,
-               int mposy,
+               int pos[],
                unsigned int mmov,
-               unsigned int mlc,
-               unsigned int mmc,
-               unsigned int mrc)
+               unsigned int clicks[])
 {
     char buffr[150];
 
     sprintf(buffr, "insert into mouse (mposx, mposy, mmov, mlc, mmc, mrc) values ('%d', '%d', '%d', '%d', '%d', '%d')",
-            mposx, mposy, mmov, mlc, mmc, mrc);
+            pos[0], pos[1], mmov, clicks[0], clicks[1], clicks[3]);
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
@@ -108,8 +103,7 @@ void db_insert(int *retval,
  * @handle:     int pointer handle.
  * @stmt:       sqlite statement pointer.
  * @mmov:       int mouse movement.
- * @mlc:        int mouse left clicks.
- * @mrc:        int mouse right clicks.
+ * @clicks[]:   int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
@@ -117,9 +111,7 @@ void db_get_mov(int *retval,
                 sqlite3 **handle,
                 sqlite3_stmt **stmt,
                 unsigned int *mmov,
-                unsigned int *mlc,
-                unsigned int *mmc,
-                unsigned int *mrc)
+                unsigned int clicks[])
 {
     char buffr[150];
     char timestr[30];
@@ -136,8 +128,8 @@ void db_get_mov(int *retval,
         printf("Selecting from database failed \n");
     } else if (sqlite3_step(*stmt) == SQLITE_ROW) {
         *mmov = sqlite3_column_int(*stmt, 0);
-        *mlc = sqlite3_column_int(*stmt, 1);
-        *mmc = sqlite3_column_int(*stmt, 2);
-        *mrc = sqlite3_column_int(*stmt, 3);
+        clicks[0] = sqlite3_column_int(*stmt, 1);
+        clicks[1] = sqlite3_column_int(*stmt, 2);
+        clicks[2] = sqlite3_column_int(*stmt, 3);
     }
 }
