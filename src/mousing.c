@@ -38,7 +38,6 @@
 #include "x11mouse.h"
 #include "ncbox.h"
 #include "sqldb.h"
-#include "mhash.h"
 #include "functions.h"
 
 struct {
@@ -65,7 +64,7 @@ int main(int argc, char *argv[])
     int cords[2];
     int oldlines, oldcols, ch;
     int box_height = 9, box_width = 32; 
-    int sleep_time = pow(2,15);
+    int sleep_time = pow(2,16);
 
     /* time specific vars */
     char timestr[30];
@@ -208,8 +207,8 @@ int main(int argc, char *argv[])
             /* Insert data into database  */
             db_insert(&retval,
                       &handle,
-                      mouse.pos,
                       mouse.mov[0],
+                      mouse.pos,
                       mouse.click
                       );
         }
@@ -230,8 +229,8 @@ int main(int argc, char *argv[])
     /* Final save to the database */
     db_insert(&retval,
               &handle,
-              mouse.pos,
               mouse.mov[0],
+              mouse.pos,
               mouse.click
               );
 

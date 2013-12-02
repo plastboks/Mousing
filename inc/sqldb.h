@@ -35,8 +35,8 @@ void db_open_database(int *retval, sqlite3 **handle);
 void db_table_create(int *retval, sqlite3 **handle);
 void db_insert(int *retval,
                sqlite3 **handle,
-               int pos[],
                unsigned int mmov,
+               int pos[],
                unsigned int clicks[]);
 void db_get_mov(int *retval,
                 sqlite3 **handle,

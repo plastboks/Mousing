@@ -77,16 +77,16 @@ void db_table_create(int *retval, sqlite3 **handle)
  *
  * @retval:     int pointer retval.
  * @handle:     int pointer handle.
- * @pos[]:      int [x,y] mouse position.
  * @mmov:       int mouse movement.
+ * @pos[]:      int [x,y] mouse position.
  * @clicks[]:   int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
 void db_insert(int *retval,
                sqlite3 **handle,
-               int pos[],
                unsigned int mmov,
+               int pos[],
                unsigned int clicks[])
 {
     char buffr[150];
