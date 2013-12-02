@@ -11,12 +11,19 @@ Compiling
 =========
 Compiling this program is simply done by: `make`.
 
-Installing
+Install
 ==========
 No global install routines have been made at this point. After the `make` run, a binary 'mousing' is created in the root folder of this project. Move binary to wanted destination.
+Make sure you have the necessary dependencies as listed below.
 
 Dependencies
 =====
   * ncurses
   * X11
   * sqlite
+
+Branches
+========
+In the beginning of the project things were so little and experimental, so there was no need for multiple branches.
+The develop branch (default), will be a feature and develop branch pushing this project forward. The develop branch might be in a none-compiling state at times.
+I will strive to make sure the master branch will be stable at all times.
