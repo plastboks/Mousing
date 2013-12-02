@@ -34,8 +34,8 @@
  *
  * @height:     int height.
  * @width:      int width.
- * @starty:     int start y pos.
  * @startx:     int start x pos.
+ * @starty:     int start y pos.
  *
  * Returns WINDOW.
  */
@@ -44,7 +44,7 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
     WINDOW *local_win;
 
     local_win = newwin(height, width, starty, startx);
-    box(local_win, 0 , 0);
+    box(local_win, 0, 0);
     wrefresh(local_win);
 
     return local_win;
@@ -53,29 +53,36 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 /**
  * Print window data.
  *
- * @starty:     int start y pos for text.
  * @staryx:     int start x pos for text.
- * @mPy:        int mouse pos y.
- * @mPx:        int mouse pos x.
- * @mLC:        int mouse left click.
- * @mRC:        int mouse left click.
+ * @cords[]     int [x,y] cords for text positions.
+ * @pos[]:      int [x,y] pos for mouse position.
+ * @clicks[]:   int [0,1,2] array for mouse clicks.
  * @mMov:       int mouse movement.
  *
  * Returns nothing.
  */
-void print_data(int starty, int startx, int mPx, int mPy, unsigned int mLC, unsigned int mRC, unsigned int mMov)
+void print_data(int cords[],
+                int pos[],
+                unsigned int clicks[],
+                unsigned int mMov)
 {
-    int offset = 20;
-    mvprintw(starty, startx + 10, "### Mousing ###");
-    mvprintw(starty + 2, startx + 2, "Pos:");
-    mvprintw(starty + 3, startx + 2, "Movement:");
-    mvprintw(starty + 4, startx + 2, "Left click:");
-    mvprintw(starty + 5, startx + 2, "Right click:");
+    int offset = 18;
+    mvprintw(cords[1], cords[0] + 8, "### Mousing ###");
+    /* shift to magenta colors */
+    attron(COLOR_PAIR(3));
+    mvprintw(cords[1] + 2, cords[0] + 2, "Pos:");
+    mvprintw(cords[1] + 3, cords[0] + 2, "Movement:");
+    mvprintw(cords[1] + 4, cords[0] + 2, "Left click:");
+    mvprintw(cords[1] + 5, cords[0] + 2, "Middle click:");
+    mvprintw(cords[1] + 6, cords[0] + 2, "Right click:");
+    /* shift to cyan colors */
     attron(COLOR_PAIR(2));
-    mvprintw(starty + 2, startx + offset, "(%04d,%04d)", mPx, mPy);
-    mvprintw(starty + 3, startx + offset, "%s ", commaprint(mMov));
-    mvprintw(starty + 4, startx + offset, "%d ", mLC);
-    mvprintw(starty + 5, startx + offset, "%d ", mRC);
+    mvprintw(cords[1] + 2, cords[0] + offset, "(%04d,%04d)", pos[0], pos[1]);
+    mvprintw(cords[1] + 3, cords[0] + offset, "%s ", commaprint(mMov));
+    mvprintw(cords[1] + 4, cords[0] + offset, "%d ", clicks[0]);
+    mvprintw(cords[1] + 5, cords[0] + offset, "%d ", clicks[1]);
+    mvprintw(cords[1] + 6, cords[0] + offset, "%d ", clicks[2]);
+    /* turn off colors */
     attroff(COLOR_PAIR(2));
 }
 

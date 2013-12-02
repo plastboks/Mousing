@@ -4,7 +4,7 @@ LFLAGS=-lncurses -lX11 -l sqlite3 -lm -lcrypto
 
 ODIR=obj
 
-_OBJ = mousing.o functions.o x11mouse.o ncbox.o sqldb.o mhash.o
+_OBJ = mousing.o functions.o x11mouse.o ncbox.o sqldb.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 mousing: $(OBJ)

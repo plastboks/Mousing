@@ -29,7 +29,7 @@ int main(void) {
  
     int number_of_screens;
     int i;
-    int readings;
+    int readings = 0;
     Bool result;
     Window *root_windows;
     Window window_returned;

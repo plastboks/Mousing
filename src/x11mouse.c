@@ -55,7 +55,7 @@ void x11read_init()
     assert(display);
     number_of_screens = XScreenCount(display);
     root_windows = malloc(sizeof(Window) * number_of_screens);
-    
+
     for (i = 0; i < number_of_screens; i++) {
         root_windows[i] = XRootWindow(display, i);
     }
@@ -64,7 +64,6 @@ void x11read_init()
 /**
  * Read X11 mouse.
  *
- * @interval:       int pointer to interval.
  * @mouse_x:        int pointer mouse x pos.
  * @mouse_y:        int pointer mouse y pos.
  * @movement:       int pointer mouse movement.
@@ -72,12 +71,17 @@ void x11read_init()
  *
  * Returns nothing.
  */
-void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *movement, unsigned int *mask_return) 
+void x11read_mouse(int *mouse_x,
+                   int *mouse_y,
+                   unsigned int *movement,
+                   unsigned int *mask_return
+                   )
 {
     int i, mov_y, mov_x;
     int old_mouse_y = *mouse_y;
     int old_mouse_x = *mouse_x;
 
+    /* Read the mouse values */
     for (i = 0; i < number_of_screens; i++) {
         result = XQueryPointer(display,
                                root_windows[i],
@@ -93,24 +97,27 @@ void x11read_mouse(int *interval, int *mouse_x, int *mouse_y, unsigned int *move
         }
     }
 
-    if (*interval != 0) {
-         
-        if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
-            if (old_mouse_x > *mouse_x) {
-                mov_x = old_mouse_x - *mouse_x;
-            } else {
-                mov_x = *mouse_x - old_mouse_x;
-            }
-
-            if (old_mouse_y > *mouse_y) {
-                mov_y = old_mouse_y - *mouse_y;
-            } else {
-                mov_y = *mouse_y - old_mouse_y;
-            }
-            *movement += mov_y + mov_x;
+    /**
+     * Calculate the movement relative to changes in
+     * mouse pos x and mouse pos y.
+     * Add up and increment the movment integer.
+     */
+    if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
+        if (old_mouse_x > *mouse_x) {
+            mov_x = old_mouse_x - *mouse_x;
+        } else {
+            mov_x = *mouse_x - old_mouse_x;
         }
+
+        if (old_mouse_y > *mouse_y) {
+            mov_y = old_mouse_y - *mouse_y;
+        } else {
+            mov_y = *mouse_y - old_mouse_y;
+        }
+        *movement += mov_y + mov_x;
     }
 
+    /* No mouse found. */
     if (result != True) {
         fprintf(stderr, "No mouse found.\n");
     }

@@ -1,9 +1,9 @@
 /*
- * Mousing main sourcefile.
+ * Mousing main source file.
  *
  * @filename: mousing.c
  *
- * @version: 0.0.2
+ * @version: 0.0.3
  *
  * @date: 2013-11-07
  *
@@ -27,92 +27,214 @@
  */
 
 #define _BSD_SOURCE
-#define VERSION 0.02
+#define VERSION 0.03
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 
 #include "x11mouse.h"
 #include "ncbox.h"
 #include "sqldb.h"
-#include "mhash.h"
 #include "functions.h"
 
+struct {
+    int pos[2];                     /* pos (x,y) */
+    int old_pos[2];                 /* old pos (x,y) */
+    unsigned int click[3];          /* clicks (left,middle,right) */
+    unsigned int old_click[3];      /* clicks (left,middle,right) */
+    unsigned int state[2];          /* state (current, previous) */
+    unsigned int mov[2];            /* movement (current, previous) */ 
+} mouse = {
+    /* set zero values */
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0, 0},
+    {0, 0},
+    {0, 0}
+};
 
 int main(int argc, char *argv[]) 
 {
-    WINDOW *my_win;
-
     int retval;
-    int oldlines, oldcols, sX, sY, mX, mY, ch;
-    int interval = 0;
-    int box_height = 10, box_width = 35; 
-    int hold_time = pow(2,15);
-    unsigned int mLC = 0; // mouse left click
-    unsigned int mRC = 0; // mouse right click
-    unsigned int mPS = 0; // mouse previous state
-    unsigned int mR = 0;
-    unsigned int mO = 0; //mouse movement;
+    /* (x,y) cords for the ncurses box */
+    int cords[2];
+    int oldlines, oldcols, ch;
+    int box_height = 9, box_width = 32; 
+    int sleep_time = pow(2,16);
 
+    /* time specific vars */
+    char timestr[30];
+    char zero_time[30] = {"00:00:00"};
+    struct tm *local;
+    time_t t;
+
+    WINDOW *my_win;
     sqlite3_stmt *stmt;
     sqlite3 *handle;
 
     x11read_init();
 
+    /* open database and create/check for tables */
     db_open_database(&retval, &handle);
     db_table_create(&retval, &handle);
 
     my_setup();
     my_colors();
 
-    sY = (LINES - box_height) / 2; 
-    sX = (COLS - box_width) / 2;
+    cords[0] = (COLS - box_width) / 2;
+    cords[1] = (LINES - box_height) / 2; 
     oldlines = LINES;
     oldcols = COLS;
 
     printw("Press Q to exit. Version: %.2f", VERSION);
     refresh();
-    my_win = create_newwin(box_height, box_width, sY, sX);
+    my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
 
-    db_get_mov(&retval, &handle, &stmt, &mO, &mLC, &mRC);
+    /**
+     * Do one initial reading and populate the integers
+     * variables before getting the database information.
+     * This to prevent the awkward movement incrementation
+     * on every startup.
+     */
+    x11read_mouse(&mouse.pos[0],
+                  &mouse.pos[1],
+                  &mouse.mov[0],
+                  &mouse.state[0]
+                  );
+
+    /* read previous data from database, if exists */
+    db_get_mov(&retval,
+               &handle,
+               &stmt,
+               &mouse.mov[0],
+               mouse.click
+               );
 
     do { 
 
-        x11read_mouse(&interval, &mX, &mY, &mO, &mR);
+        /** 
+         * Get time
+         */
+        t = time(NULL);
+        local = localtime(&t);
+        strftime(timestr, sizeof(timestr), "%T", local);
+
+        /* Read from mouse */
+        x11read_mouse(&mouse.pos[0],
+                      &mouse.pos[1],
+                      &mouse.mov[0],
+                      &mouse.state[0]
+                      );
+
+        /**
+         * Redraw window if resized.
+         * This should be split into another file, and
+         * only run/checked if window changes.
+         */
         if ((oldlines != LINES) || (oldcols != COLS)) {
-            sY = (LINES - box_height) / 2; 
-            sX = (COLS - box_width) / 2;
+            cords[1] = (LINES - box_height) / 2; 
+            cords[0] = (COLS - box_width) / 2;
             oldlines = LINES;
             oldcols = COLS;
             destroy_win(my_win);
-            my_win = create_newwin(box_height, box_width, sY, sX);
+            my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
         }
-        if ((mR == 1024) && (mPS == 0)) {
-            mRC++;
-            mPS = 1;
+
+        /* right click */
+        if ((mouse.state[0] == 1024) && (mouse.state[1] == 0)) {
+            mouse.click[2]++;
+            mouse.state[1] = 1;
         }
-        if ((mR == 256) && (mPS == 0)) {
-            mLC++;
-            mPS = 1;
+        /* left click */
+        if ((mouse.state[0] == 256) && (mouse.state[1] == 0)) {
+            mouse.click[0]++;
+            mouse.state[1] = 1;
         }
-        if (mR == 0) {
-            mPS = 0;
+        /* middle click */
+        if ((mouse.state[0] == 512) && (mouse.state[1] == 0)) {
+            mouse.click[1]++;
+            mouse.state[1] = 1;
         }
-        print_data(sY, sX, mX, mY, mLC, mRC, mO);
+        if (mouse.state[0] == 0) {
+            mouse.state[1] = 0;
+        }
+
+        /* Print data to window */
+        print_data(cords,
+                   mouse.pos,
+                   mouse.click,
+                   mouse.mov[0]
+                   );
+
+        /* refresh the ncurses window */
         refresh();
 
-        if (interval == 1) {
-            db_insert(&retval, &handle, mX, mY, mO, mLC, mRC);
-        }
+        /**
+         * Here be some fancy time checking...
+         * If the time is zero_time, reset all
+         * counters, (day change etc.)
+         */
+        if (!strcmp(timestr, zero_time)) {
+            mouse.mov[0] = 0;
+            mouse.click[0] = 0;
+            mouse.click[1] = 0;
+            mouse.click[2] = 0;
 
-        exp_inc(&interval, 10);
-        usleep(hold_time);
+            /* redraw window and clean up garbage */
+            destroy_win(my_win);
+            my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
+
+            /* take a small break */
+            usleep(pow(2,20));
+        }
+      
+        /**
+         * Update if mouse moves.
+         * 
+         * This check is a bit nasty. Might consider improving it.
+         */
+        if (((mouse.old_pos[0] != mouse.pos[0])
+            && (mouse.old_pos[1] != mouse.pos[1]))
+            || (mouse.old_click[0] != mouse.click[0])
+            || (mouse.old_click[1] != mouse.click[1])
+            || (mouse.old_click[2] != mouse.click[2])
+            )
+        {
+            /* Insert data into database  */
+            db_insert(&retval,
+                      &handle,
+                      mouse.mov[0],
+                      mouse.pos,
+                      mouse.click
+                      );
+        }
+        
+        /* update mouse.pos and mouse.click with old */
+        mouse.mov[1] = mouse.mov[0];
+        mouse.old_pos[0] = mouse.pos[0];
+        mouse.old_pos[1] = mouse.pos[1];
+        mouse.old_click[0] = mouse.click[0];
+        mouse.old_click[1] = mouse.click[1];
+        mouse.old_click[2] = mouse.click[2];
+
+        /* Sleep for a while, to prevent high CPU load */
+        usleep(sleep_time);
 
     } while ((ch = getch()) != 'q');
 
-    db_insert(&retval, &handle, mX, mY, mO, mLC, mRC);
+    /* Final save to the database */
+    db_insert(&retval,
+              &handle,
+              mouse.mov[0],
+              mouse.pos,
+              mouse.click
+              );
+
+    /* End routine */
     endwin();
     free(root_windows);
     sqlite3_close(handle);
