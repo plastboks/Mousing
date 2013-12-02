@@ -1,17 +1,17 @@
 Mousing Todos
 =============
-  * Track scrolling use ?
+* Track scrolling use ?
     * This seems to need another X11 library ... ?
-  * Clean up code (refactor), and merge variables into arrays etc.
-      * Try to find the best datastorage 'structure' for the main mouse properties.
+* Clean up code (refactor), and merge variables into arrays etc.
+    * Try to find the best datastorage 'structure' for the main mouse properties.
         * Use structs ? 
         * Use arrays ?
 
 Known bugs
 ==========
+There seem still to be a little strain on the CPU at times. Try to figure out a way to keep the interface smooth and snappy, at the same time CPU kind.
 
-
-Mousing Future tech
+Mousing Future Tech
 ===================
-  * Export data and generate som pretty graphs/plots.
+  * Export data and generate some pretty graphs/plots.
   * Make better use of ncurses with centered information, and panels (date, help, menus).
