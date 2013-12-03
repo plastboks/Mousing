@@ -48,7 +48,7 @@ struct {
     unsigned int old_click[3];      /* clicks (left,middle,right) */
     unsigned int state[2];          /* state (current, previous) */
     unsigned int mov[2];            /* movement (current, previous) */ 
-} mouse = {
+} m = {
     /* set zero values */
     {0, 0},
     {0, 0},
@@ -103,10 +103,10 @@ int main(int argc, char *argv[])
      * This to prevent the awkward movement incrementation
      * on every startup.
      */
-    x11read_mouse(&mouse.pos[0], &mouse.pos[1], &mouse.mov[0], &mouse.state[0]);
+    x11read_mouse(&m.pos[0], &m.pos[1], &m.mov[0], &m.state[0]);
 
     /* read previous data from database, if exists */
-    db_get_mov(&retval, &handle, &stmt, &mouse.mov[0], mouse.click);
+    db_get_mov(&retval, &handle, &stmt, &m.mov[0], m.click);
 
     do { 
 
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
         strftime(timestr, sizeof(timestr), "%T", local);
 
         /* Read from mouse */
-        x11read_mouse(&mouse.pos[0], &mouse.pos[1], &mouse.mov[0], &mouse.state[0]);
+        x11read_mouse(&m.pos[0], &m.pos[1], &m.mov[0], &m.state[0]);
 
         /**
          * Redraw window if resized.
@@ -136,27 +136,27 @@ int main(int argc, char *argv[])
         }
 
         /* right click */
-        if ((mouse.state[0] == 1024) && (mouse.state[1] == 0)) {
-            mouse.click[2]++;
-            mouse.state[1] = 1;
+        if ((m.state[0] == 1024) && (m.state[1] == 0)) {
+            m.click[2]++;
+            m.state[1] = 1;
         }
         /* left click */
-        if ((mouse.state[0] == 256) && (mouse.state[1] == 0)) {
-            mouse.click[0]++;
-            mouse.state[1] = 1;
+        if ((m.state[0] == 256) && (m.state[1] == 0)) {
+            m.click[0]++;
+            m.state[1] = 1;
         }
         /* middle click */
-        if ((mouse.state[0] == 512) && (mouse.state[1] == 0)) {
-            mouse.click[1]++;
-            mouse.state[1] = 1;
+        if ((m.state[0] == 512) && (m.state[1] == 0)) {
+            m.click[1]++;
+            m.state[1] = 1;
         }
         /**
          * Upon mouse button keyup reset the state byte.
          * This to prevent more than one record to be saved 
          * to the database if mouse button has a long keydown.
          */
-        if (mouse.state[0] == 0) {
-            mouse.state[1] = 0;
+        if (m.state[0] == 0) {
+            m.state[1] = 0;
         }
 
         /**
@@ -165,10 +165,10 @@ int main(int argc, char *argv[])
          * counters, (day change etc.)
          */
         if (!strcmp(timestr, zero_time)) {
-            mouse.mov[0] = 0;
-            mouse.click[0] = 0;
-            mouse.click[1] = 0;
-            mouse.click[2] = 0;
+            m.mov[0] = 0;
+            m.click[0] = 0;
+            m.click[1] = 0;
+            m.click[2] = 0;
             /* redraw window and clean up garbage */
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
@@ -183,21 +183,21 @@ int main(int argc, char *argv[])
          * db_write_intval.
          */
         if (db_write_intval == 1) {
-            if (memcmp(mouse.old_pos, mouse.pos, sizeof(mouse.pos))
-                || (memcmp(mouse.old_click, mouse.click, sizeof(mouse.click)))
+            if (memcmp(m.old_pos, m.pos, sizeof(m.pos))
+                || (memcmp(m.old_click, m.click, sizeof(m.click)))
                 )
             {
                 /* Insert data into database  */
-                db_insert(&retval, &handle, mouse.mov[0], mouse.pos, mouse.click);
-                /* update mouse.pos and mouse.click with old */
-                mouse.mov[1] = mouse.mov[0];
-                memcpy(mouse.old_pos, mouse.pos, sizeof(mouse.pos));
-                memcpy(mouse.old_click, mouse.click, sizeof(mouse.click));
+                db_insert(&retval, &handle, m.mov[0], m.pos, m.click);
+                /* update m.pos and m.click with old */
+                m.mov[1] = m.mov[0];
+                memcpy(m.old_pos, m.pos, sizeof(m.pos));
+                memcpy(m.old_click, m.click, sizeof(m.click));
             }
         }
         
         /* Print data to window */
-        print_data(cords, mouse.pos, mouse.click, mouse.mov[0]);
+        print_data(cords, m.pos, m.click, m.mov[0]);
         /* refresh the ncurses window */
         refresh();
         /* Sleep for a while, to prevent high CPU load */
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
     } while ((ch = getch()) != 'q');
 
     /* Final save to the database */
-    db_insert(&retval, &handle, mouse.mov[0], mouse.pos, mouse.click);
+    db_insert(&retval, &handle, m.mov[0], m.pos, m.click);
 
     /* End routine */
     endwin();
