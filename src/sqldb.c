@@ -92,7 +92,7 @@ void db_insert(int *retval,
     char buffr[150];
 
     sprintf(buffr, "insert into mouse (mposx, mposy, mmov, mlc, mmc, mrc) values ('%d', '%d', '%d', '%d', '%d', '%d')",
-            pos[0], pos[1], mmov, clicks[0], clicks[1], clicks[3]);
+            pos[0], pos[1], mmov, clicks[0], clicks[1], clicks[2]);
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
 
