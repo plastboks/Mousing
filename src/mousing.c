@@ -62,7 +62,8 @@ int main(int argc, char *argv[])
     int retval;
     /* (x,y) cords for the ncurses box */
     int cords[2];
-    int oldlines, oldcols, ch;
+    int old_cords[2];
+    int ch; /* input char */
     int box_height = 9, box_width = 32; 
     int sleep_time = pow(2,16);
 
@@ -87,8 +88,8 @@ int main(int argc, char *argv[])
 
     cords[0] = (COLS - box_width) / 2;
     cords[1] = (LINES - box_height) / 2; 
-    oldlines = LINES;
-    oldcols = COLS;
+    old_cords[1] = LINES;
+    old_cords[0] = COLS;
 
     printw("Press Q to exit. Version: %.2f", VERSION);
     refresh();
@@ -100,19 +101,10 @@ int main(int argc, char *argv[])
      * This to prevent the awkward movement incrementation
      * on every startup.
      */
-    x11read_mouse(&mouse.pos[0],
-                  &mouse.pos[1],
-                  &mouse.mov[0],
-                  &mouse.state[0]
-                  );
+    x11read_mouse(&mouse.pos[0], &mouse.pos[1], &mouse.mov[0], &mouse.state[0]);
 
     /* read previous data from database, if exists */
-    db_get_mov(&retval,
-               &handle,
-               &stmt,
-               &mouse.mov[0],
-               mouse.click
-               );
+    db_get_mov(&retval, &handle, &stmt, &mouse.mov[0], mouse.click);
 
     do { 
 
@@ -124,22 +116,18 @@ int main(int argc, char *argv[])
         strftime(timestr, sizeof(timestr), "%T", local);
 
         /* Read from mouse */
-        x11read_mouse(&mouse.pos[0],
-                      &mouse.pos[1],
-                      &mouse.mov[0],
-                      &mouse.state[0]
-                      );
+        x11read_mouse(&mouse.pos[0], &mouse.pos[1], &mouse.mov[0], &mouse.state[0]);
 
         /**
          * Redraw window if resized.
          * This should be split into another file, and
          * only run/checked if window changes.
          */
-        if ((oldlines != LINES) || (oldcols != COLS)) {
+        if ((old_cords[1] != LINES) || (old_cords[0] != COLS)) {
             cords[1] = (LINES - box_height) / 2; 
             cords[0] = (COLS - box_width) / 2;
-            oldlines = LINES;
-            oldcols = COLS;
+            old_cords[1] = LINES;
+            old_cords[0] = COLS;
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
         }
@@ -163,16 +151,6 @@ int main(int argc, char *argv[])
             mouse.state[1] = 0;
         }
 
-        /* Print data to window */
-        print_data(cords,
-                   mouse.pos,
-                   mouse.click,
-                   mouse.mov[0]
-                   );
-
-        /* refresh the ncurses window */
-        refresh();
-
         /**
          * Here be some fancy time checking...
          * If the time is zero_time, reset all
@@ -183,56 +161,39 @@ int main(int argc, char *argv[])
             mouse.click[0] = 0;
             mouse.click[1] = 0;
             mouse.click[2] = 0;
-
             /* redraw window and clean up garbage */
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
-
             /* take a small break */
             usleep(pow(2,20));
         }
       
         /**
          * Update if mouse moves.
-         * 
-         * This check is a bit nasty. Might consider improving it.
          */
-        if (((mouse.old_pos[0] != mouse.pos[0])
-            && (mouse.old_pos[1] != mouse.pos[1]))
-            || (mouse.old_click[0] != mouse.click[0])
-            || (mouse.old_click[1] != mouse.click[1])
-            || (mouse.old_click[2] != mouse.click[2])
+        if (memcmp(mouse.old_pos, mouse.pos, sizeof(mouse.pos))
+            || (memcmp(mouse.old_click, mouse.click, sizeof(mouse.click)))
             )
         {
             /* Insert data into database  */
-            db_insert(&retval,
-                      &handle,
-                      mouse.mov[0],
-                      mouse.pos,
-                      mouse.click
-                      );
+            db_insert(&retval, &handle, mouse.mov[0], mouse.pos, mouse.click);
         }
         
+        /* Print data to window */
+        print_data(cords, mouse.pos, mouse.click, mouse.mov[0]);
+        /* refresh the ncurses window */
+        refresh();
         /* update mouse.pos and mouse.click with old */
         mouse.mov[1] = mouse.mov[0];
-        mouse.old_pos[0] = mouse.pos[0];
-        mouse.old_pos[1] = mouse.pos[1];
-        mouse.old_click[0] = mouse.click[0];
-        mouse.old_click[1] = mouse.click[1];
-        mouse.old_click[2] = mouse.click[2];
-
+        memcpy(mouse.old_pos, mouse.pos, sizeof(mouse.pos));
+        memcpy(mouse.old_click, mouse.click, sizeof(mouse.click));
         /* Sleep for a while, to prevent high CPU load */
         usleep(sleep_time);
 
     } while ((ch = getch()) != 'q');
 
     /* Final save to the database */
-    db_insert(&retval,
-              &handle,
-              mouse.mov[0],
-              mouse.pos,
-              mouse.click
-              );
+    db_insert(&retval, &handle, mouse.mov[0], mouse.pos, mouse.click);
 
     /* End routine */
     endwin();
