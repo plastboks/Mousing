@@ -28,6 +28,7 @@
 
 #define _BSD_SOURCE
 #define VERSION 0.03
+#define DB_WRITE_INTVAL 8
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +66,8 @@ int main(int argc, char *argv[])
     int old_cords[2];
     int ch; /* input char */
     int box_height = 9, box_width = 32; 
-    int sleep_time = pow(2,16);
+    int sleep_time = pow(2,14);
+    int db_write_intval = 0;
 
     /* time specific vars */
     char timestr[30];
@@ -128,6 +130,7 @@ int main(int argc, char *argv[])
             cords[0] = (COLS - box_width) / 2;
             old_cords[1] = LINES;
             old_cords[0] = COLS;
+            /* redraw window and clean up garbage */
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
         }
@@ -147,6 +150,11 @@ int main(int argc, char *argv[])
             mouse.click[1]++;
             mouse.state[1] = 1;
         }
+        /**
+         * Upon mouse button keyup reset the state byte.
+         * This to prevent more than one record to be saved 
+         * to the database if mouse button has a long keydown.
+         */
         if (mouse.state[0] == 0) {
             mouse.state[1] = 0;
         }
@@ -170,24 +178,30 @@ int main(int argc, char *argv[])
       
         /**
          * Update if mouse moves.
+         * First check if the write intval correct (this to prevent mass insert
+         * to the database), and then check if the mouse has moved since last
+         * db_write_intval.
          */
-        if (memcmp(mouse.old_pos, mouse.pos, sizeof(mouse.pos))
-            || (memcmp(mouse.old_click, mouse.click, sizeof(mouse.click)))
-            )
-        {
-            /* Insert data into database  */
-            db_insert(&retval, &handle, mouse.mov[0], mouse.pos, mouse.click);
+        if (db_write_intval == 1) {
+            if (memcmp(mouse.old_pos, mouse.pos, sizeof(mouse.pos))
+                || (memcmp(mouse.old_click, mouse.click, sizeof(mouse.click)))
+                )
+            {
+                /* Insert data into database  */
+                db_insert(&retval, &handle, mouse.mov[0], mouse.pos, mouse.click);
+                /* update mouse.pos and mouse.click with old */
+                mouse.mov[1] = mouse.mov[0];
+                memcpy(mouse.old_pos, mouse.pos, sizeof(mouse.pos));
+                memcpy(mouse.old_click, mouse.click, sizeof(mouse.click));
+            }
         }
         
         /* Print data to window */
         print_data(cords, mouse.pos, mouse.click, mouse.mov[0]);
         /* refresh the ncurses window */
         refresh();
-        /* update mouse.pos and mouse.click with old */
-        mouse.mov[1] = mouse.mov[0];
-        memcpy(mouse.old_pos, mouse.pos, sizeof(mouse.pos));
-        memcpy(mouse.old_click, mouse.click, sizeof(mouse.click));
         /* Sleep for a while, to prevent high CPU load */
+        exp_inc(&db_write_intval, DB_WRITE_INTVAL);
         usleep(sleep_time);
 
     } while ((ch = getch()) != 'q');
