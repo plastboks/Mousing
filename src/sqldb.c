@@ -32,7 +32,7 @@
  * Open database.
  *
  * @retval:     int pointer retval.
- * @handle:     int pointer handle.
+ * @handle:     sqlite pointer handle.
  *
  * Return nothing.
  */
@@ -51,7 +51,7 @@ void db_open_database(int *retval, sqlite3 **handle) {
  * Create table for database.
  *
  * @retval:     int pointer retval.
- * @handle:     int pointer handle.
+ * @handle:     sqlite pointer handle.
  *
  * Returns nothing.
  */
@@ -76,7 +76,7 @@ void db_table_create(int *retval, sqlite3 **handle)
  * Insert data into database.
  *
  * @retval:     int pointer retval.
- * @handle:     int pointer handle.
+ * @handle:     sqlite pointer handle.
  * @mmov:       int mouse movement.
  * @pos[]:      int [x,y] mouse position.
  * @clicks[]:   int [0,1,2] mouse clicks.
@@ -100,7 +100,7 @@ void db_insert(int *retval,
  * Select from database.
  *
  * @retval:     int pointer retval.
- * @handle:     int pointer handle.
+ * @handle:     sqlite pointer handle.
  * @stmt:       sqlite statement pointer.
  * @mmov:       int mouse movement.
  * @clicks[]:   int [0,1,2] mouse clicks.

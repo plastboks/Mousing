@@ -29,6 +29,13 @@
 #define _BSD_SOURCE
 #define VERSION 0.03
 #define DB_WRITE_INTVAL 8
+/* reset time */
+#define RESET_HOUR 0
+#define RESET_MIN 0
+#define RESET_SEC 0
+/* ncurses box */
+#define BOX_HEIGHT 9
+#define BOX_WIDTH 32
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,15 +72,18 @@ int main(int argc, char *argv[])
     int cords[2];
     int old_cords[2];
     int ch; /* input char */
-    int box_height = 9, box_width = 32; 
+    int box_height = BOX_HEIGHT, box_width = BOX_WIDTH; 
     int sleep_time = pow(2,14);
     int db_write_intval = 0;
 
     /* time specific vars */
     char timestr[30];
-    char zero_time[30] = {"00:00:00"};
+    char zero_time[30];
     struct tm *local;
     time_t t;
+    sprintf(zero_time, "%02d:%02d:%02d",
+            RESET_HOUR, RESET_MIN, RESET_SEC
+            );
 
     WINDOW *my_win;
     sqlite3_stmt *stmt;
@@ -108,8 +118,8 @@ int main(int argc, char *argv[])
     /* read previous data from database, if exists */
     db_get_mov(&retval, &handle, &stmt, &m.mov[0], m.click);
 
+    /* do the following until user presses the Q key */
     do { 
-
         /** 
          * Get time
          */
@@ -151,9 +161,9 @@ int main(int argc, char *argv[])
             m.state[1] = 1;
         }
         /**
-         * Upon mouse button keyup reset the state byte.
+         * Upon mouse button key up reset the state byte.
          * This to prevent more than one record to be saved 
-         * to the database if mouse button has a long keydown.
+         * to the database if mouse button has a long key down.
          */
         if (m.state[0] == 0) {
             m.state[1] = 0;
@@ -161,8 +171,7 @@ int main(int argc, char *argv[])
 
         /**
          * Here be some fancy time checking...
-         * If the time is zero_time, reset all
-         * counters, (day change etc.)
+         * If the time is zero_time, reset all counters, (day change etc.)
          */
         if (!strcmp(timestr, zero_time)) {
             m.mov[0] = 0;
@@ -198,18 +207,22 @@ int main(int argc, char *argv[])
         
         /* Print data to window */
         print_data(cords, m.pos, m.click, m.mov[0]);
+
         /* refresh the ncurses window */
         refresh();
-        /* Sleep for a while, to prevent high CPU load */
+
+        /* Increment the db_write_intval var */
         exp_inc(&db_write_intval, DB_WRITE_INTVAL);
+
+        /* Sleep for a while, to prevent high CPU load */
         usleep(sleep_time);
 
     } while ((ch = getch()) != 'q');
 
-    /* Final save to the database */
+    /* Do one final save to the database */
     db_insert(&retval, &handle, m.mov[0], m.pos, m.click);
 
-    /* End routine */
+    /* Clean up and end program, end routine */
     endwin();
     free(root_windows);
     sqlite3_close(handle);
