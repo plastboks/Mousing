@@ -9,7 +9,6 @@ Mousing Todos
 
 Known bugs
 ==========
-There seem still to be a little strain on the CPU at times. Try to figure out a way to keep the interface smooth and snappy, at the same time CPU kind.
 
 Mousing Future Tech
 ===================

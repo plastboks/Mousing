@@ -70,10 +70,11 @@ int main(int argc, char *argv[])
     int retval;
     int cords[2]; /* (x,y) cords for the ncurses box */
     int old_cords[2];
-    int ch[2]; /* input char [current, old] */
     int box_height = BOX_HEIGHT, box_width = BOX_WIDTH; 
     int sleep_time = pow(2,14);
     int db_write_intval = 0;
+
+    char ch; /* input char [current, old] */
 
     /* time specific vars */
     char timestr[30];
@@ -120,7 +121,7 @@ int main(int argc, char *argv[])
     /* do the following until user presses the Q key */
     do { 
 
-        ch[0] = getch();
+        ch = getch();
 
         /** 
          * Get time
@@ -184,15 +185,7 @@ int main(int argc, char *argv[])
         }
         
         /* Print data to window */
-        switch (ch[0]) {
-            case 's':
-                print_mouse_stats(cords);
-                break;
-            case 'm':
-            default:
-                print_mouse_data(cords, m.pos, m.click, m.mov[0]);
-                break;
-        }
+        print_mouse_data(cords, m.pos, m.click, m.mov[0]);
 
         /* refresh the ncurses window */
         refresh();
@@ -202,8 +195,8 @@ int main(int argc, char *argv[])
 
         /* Sleep for a while, to prevent high CPU load */
         usleep(sleep_time);
-
-    } while (ch[0] != 'q');
+        
+    } while (ch != 'q');
 
     /* Do one final save to the database */
     db_insert(&retval, &handle, m.mov[0], m.pos, m.click);
