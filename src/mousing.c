@@ -68,10 +68,9 @@ struct {
 int main(int argc, char *argv[]) 
 {
     int retval;
-    /* (x,y) cords for the ncurses box */
-    int cords[2];
+    int cords[2]; /* (x,y) cords for the ncurses box */
     int old_cords[2];
-    int ch; /* input char */
+    int ch[2]; /* input char [current, old] */
     int box_height = BOX_HEIGHT, box_width = BOX_WIDTH; 
     int sleep_time = pow(2,14);
     int db_write_intval = 0;
@@ -113,13 +112,16 @@ int main(int argc, char *argv[])
      * This to prevent the awkward movement incrementation
      * on every startup.
      */
-    x11read_mouse(&m.pos[0], &m.pos[1], &m.mov[0], &m.state[0]);
+    x11read_mouse(m.pos, m.click, m.state, &m.mov[0]);
 
     /* read previous data from database, if exists */
     db_get_mov(&retval, &handle, &stmt, &m.mov[0], m.click);
 
     /* do the following until user presses the Q key */
     do { 
+
+        ch[0] = getch();
+
         /** 
          * Get time
          */
@@ -128,7 +130,7 @@ int main(int argc, char *argv[])
         strftime(timestr, sizeof(timestr), "%T", local);
 
         /* Read from mouse */
-        x11read_mouse(&m.pos[0], &m.pos[1], &m.mov[0], &m.state[0]);
+        x11read_mouse(m.pos, m.click, m.state, &m.mov[0]);
 
         /**
          * Redraw window if resized.
@@ -143,30 +145,6 @@ int main(int argc, char *argv[])
             /* redraw window and clean up garbage */
             destroy_win(my_win);
             my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
-        }
-
-        /* right click */
-        if ((m.state[0] == 1024) && (m.state[1] == 0)) {
-            m.click[2]++;
-            m.state[1] = 1;
-        }
-        /* left click */
-        if ((m.state[0] == 256) && (m.state[1] == 0)) {
-            m.click[0]++;
-            m.state[1] = 1;
-        }
-        /* middle click */
-        if ((m.state[0] == 512) && (m.state[1] == 0)) {
-            m.click[1]++;
-            m.state[1] = 1;
-        }
-        /**
-         * Upon mouse button key up reset the state byte.
-         * This to prevent more than one record to be saved 
-         * to the database if mouse button has a long key down.
-         */
-        if (m.state[0] == 0) {
-            m.state[1] = 0;
         }
 
         /**
@@ -206,7 +184,15 @@ int main(int argc, char *argv[])
         }
         
         /* Print data to window */
-        print_data(cords, m.pos, m.click, m.mov[0]);
+        switch (ch[0]) {
+            case 's':
+                print_mouse_stats(cords);
+                break;
+            case 'm':
+            default:
+                print_mouse_data(cords, m.pos, m.click, m.mov[0]);
+                break;
+        }
 
         /* refresh the ncurses window */
         refresh();
@@ -217,7 +203,7 @@ int main(int argc, char *argv[])
         /* Sleep for a while, to prevent high CPU load */
         usleep(sleep_time);
 
-    } while ((ch = getch()) != 'q');
+    } while (ch[0] != 'q');
 
     /* Do one final save to the database */
     db_insert(&retval, &handle, m.mov[0], m.pos, m.click);

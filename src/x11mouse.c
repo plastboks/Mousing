@@ -64,22 +64,23 @@ void x11read_init()
 /**
  * Read X11 mouse.
  *
- * @mouse_x:        int pointer mouse x pos.
- * @mouse_y:        int pointer mouse y pos.
- * @movement:       int pointer mouse movement.
- * @mask_return:    int pointer mask_return.
+ * @pos[]:          int pos [x,y] for mouse.
+ * @click[]:        unsigned int [left, middle, right] clicks for mouse.
+ * @state[]:        unsigned int [current, old] (mask_return).
+ * @movement:       unsigned int* pointer mouse movement.
  *
  * Returns nothing.
  */
-void x11read_mouse(int *mouse_x,
-                   int *mouse_y,
-                   unsigned int *movement,
-                   unsigned int *mask_return
+void x11read_mouse(int pos[],
+                   unsigned int click[],
+                   unsigned int state[],
+                   unsigned int *movement
                    )
 {
+
     int i, mov_y, mov_x;
-    int old_mouse_y = *mouse_y;
-    int old_mouse_x = *mouse_x;
+    int old_mouse_x = pos[0];
+    int old_mouse_y = pos[1];
 
     /* Read the mouse values */
     for (i = 0; i < number_of_screens; i++) {
@@ -87,14 +88,19 @@ void x11read_mouse(int *mouse_x,
                                root_windows[i],
                                &window_returned,
                                &window_returned,
-                               mouse_x,
-                               mouse_y,
+                               &pos[0],
+                               &pos[1],
                                &win_x,
                                &win_y,
-                               mask_return);
+                               &state[0]);
         if (result == True) {
             break;
         }
+    }
+
+    /* No mouse found. */
+    if (result != True) {
+        fprintf(stderr, "No mouse found.\n");
     }
 
     /**
@@ -102,23 +108,47 @@ void x11read_mouse(int *mouse_x,
      * mouse pos x and mouse pos y.
      * Add up and increment the movment integer.
      */
-    if (old_mouse_x != *mouse_x || old_mouse_y != *mouse_y) {
-        if (old_mouse_x > *mouse_x) {
-            mov_x = old_mouse_x - *mouse_x;
+    if (old_mouse_x != pos[0] || old_mouse_y != pos[1]) {
+        if (old_mouse_x > pos[0]) {
+            mov_x = old_mouse_x - pos[0];
         } else {
-            mov_x = *mouse_x - old_mouse_x;
+            mov_x = pos[0] - old_mouse_x;
         }
 
-        if (old_mouse_y > *mouse_y) {
-            mov_y = old_mouse_y - *mouse_y;
+        if (old_mouse_y > pos[1]) {
+            mov_y = old_mouse_y - pos[1];
         } else {
-            mov_y = *mouse_y - old_mouse_y;
+            mov_y = pos[1] - old_mouse_y;
         }
         *movement += mov_y + mov_x;
     }
 
-    /* No mouse found. */
-    if (result != True) {
-        fprintf(stderr, "No mouse found.\n");
+    /**
+     * Increment mouse clicks
+     */
+
+    /* right click */
+    if ((state[0] == 1024) && (state[1] == 0)) {
+        click[2]++;
+        state[1] = 1;
     }
+    /* left click */
+    if ((state[0] == 256) && (state[1] == 0)) {
+        click[0]++;
+        state[1] = 1;
+    }
+    /* middle click */
+    if ((state[0] == 512) && (state[1] == 0)) {
+        click[1]++;
+        state[1] = 1;
+    }
+    /**
+     * Upon mouse button key up reset the state byte.
+     * This to prevent more than one record to be saved 
+     * to the database if mouse button has a long key down.
+     */
+    if (state[0] == 0) {
+        state[1] = 0;
+    }
+
 }

@@ -40,8 +40,8 @@ Display *display;
 int win_x, win_y;
 
 void x11read_init();
-void x11read_mouse(int *mouse_x,
-                   int *mouse_y,
-                   unsigned int *movement,
-                   unsigned int *mask_return
+void x11read_mouse(int pos[],
+                   unsigned int click[],
+                   unsigned int state[],
+                   unsigned int *movement
                    );

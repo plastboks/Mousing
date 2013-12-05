@@ -33,10 +33,8 @@
 #include <fcntl.h>
 
 WINDOW *create_newwin(int height, int width, int starty, int startx);
-void print_data(int cords[],
-                int pos[],
-                unsigned int clicks[],
-                unsigned int mMov);
+void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned int mMov);
+void print_mouse_stats(int cords[]);
 void destroy_win(WINDOW *local_win);
 void my_setup();
 void my_colors();

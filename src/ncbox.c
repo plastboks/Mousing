@@ -51,7 +51,7 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 }
 
 /**
- * Print window data.
+ * Print mouse data.
  *
  * @staryx:     int start x pos for text.
  * @cords[]     int [x,y] cords for text positions.
@@ -61,10 +61,7 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
  *
  * Returns nothing.
  */
-void print_data(int cords[],
-                int pos[],
-                unsigned int clicks[],
-                unsigned int mMov)
+void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned int mMov)
 {
     int offset = 18;
     mvprintw(cords[1], cords[0] + 8, "### Mousing ###");
@@ -85,6 +82,15 @@ void print_data(int cords[],
     /* turn off colors */
     attroff(COLOR_PAIR(2));
 }
+
+/**
+ * Print stats data
+ */
+void print_mouse_stats(int cords[])
+{
+    mvprintw(cords[1], cords[0] + 8, "### Stats ###");
+}
+
 
 /**
  * Destroy window.
