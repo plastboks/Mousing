@@ -39,11 +39,14 @@
  *
  * Returns WINDOW.
  */
-WINDOW *create_newwin(int height, int width, int starty, int startx)
+WINDOW *create_newwin(int box_dim[][2], int starty, int startx, int screen)
 {
     WINDOW *local_win;
 
-    local_win = newwin(height, width, starty, startx);
+    local_win = newwin(box_dim[screen][1],
+                       box_dim[screen][0],
+                       starty,
+                       startx);
     box(local_win, 0, 0);
     wrefresh(local_win);
 
@@ -88,7 +91,7 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
  */
 void print_mouse_stats(int cords[])
 {
-    mvprintw(cords[1], cords[0] + 8, "### Stats ###");
+    mvprintw(cords[1], cords[0] + 10, "### Stats ###");
 }
 
 
@@ -106,6 +109,17 @@ void destroy_win(WINDOW *local_win)
     delwin(local_win);
     endwin();
     refresh();
+}
+
+/**
+ * Update screen and box cords
+ */
+void cord_update(int cords[], int old_cords[], int box_dim[][2], int screen)
+{
+    cords[0] = (COLS - box_dim[screen][0]) / 2;
+    cords[1] = (LINES - box_dim[screen][1]) / 2; 
+    old_cords[1] = LINES;
+    old_cords[0] = COLS;
 }
 
 /**
