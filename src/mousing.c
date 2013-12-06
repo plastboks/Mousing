@@ -33,9 +33,6 @@
 #define RESET_HOUR 0
 #define RESET_MIN 0
 #define RESET_SEC 0
-/* ncurses box */
-#define BOX_HEIGHT 9
-#define BOX_WIDTH 32
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,11 +67,14 @@ int main(int argc, char *argv[])
     int retval;
     int cords[2]; /* (x,y) cords for the ncurses box */
     int old_cords[2];
-    int box_height = BOX_HEIGHT, box_width = BOX_WIDTH; 
     int sleep_time = pow(2,14);
     int db_write_intval = 0;
 
     char ch; /* input char [current, old] */
+    int screen = 0;
+
+    /* box dim [width, height] */
+    int box_dim[2][2] = {{32, 9},{32,20}};
 
     /* time specific vars */
     char timestr[30];
@@ -98,14 +98,11 @@ int main(int argc, char *argv[])
     my_setup();
     my_colors();
 
-    cords[0] = (COLS - box_width) / 2;
-    cords[1] = (LINES - box_height) / 2; 
-    old_cords[1] = LINES;
-    old_cords[0] = COLS;
-
     printw("Press Q to exit. Version: %.2f", VERSION);
     refresh();
-    my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
+
+    cord_update(cords, old_cords, box_dim, screen);
+    my_win = create_newwin(box_dim, cords[1], cords[0], screen);
 
     /**
      * Do one initial reading and populate the integers
@@ -122,6 +119,20 @@ int main(int argc, char *argv[])
     do { 
 
         ch = getch();
+        switch(ch) {
+            case 'm':
+                screen = 0;
+                cord_update(cords, old_cords, box_dim, screen);
+                destroy_win(my_win);
+                my_win = create_newwin(box_dim, cords[1], cords[0], screen);
+                break;
+            case 's':
+                screen = 1;
+                cord_update(cords, old_cords, box_dim, screen);
+                destroy_win(my_win);
+                my_win = create_newwin(box_dim, cords[1], cords[0], screen);
+                break;
+        }
 
         /** 
          * Get time
@@ -135,17 +146,11 @@ int main(int argc, char *argv[])
 
         /**
          * Redraw window if resized.
-         * This should be split into another file, and
-         * only run/checked if window changes.
          */
         if ((old_cords[1] != LINES) || (old_cords[0] != COLS)) {
-            cords[1] = (LINES - box_height) / 2; 
-            cords[0] = (COLS - box_width) / 2;
-            old_cords[1] = LINES;
-            old_cords[0] = COLS;
-            /* redraw window and clean up garbage */
+            cord_update(cords, old_cords, box_dim, screen);
             destroy_win(my_win);
-            my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
+            my_win = create_newwin(box_dim, cords[1], cords[0], screen);
         }
 
         /**
@@ -159,7 +164,7 @@ int main(int argc, char *argv[])
             m.click[2] = 0;
             /* redraw window and clean up garbage */
             destroy_win(my_win);
-            my_win = create_newwin(box_height, box_width, cords[1], cords[0]);
+            my_win = create_newwin(box_dim, cords[1], cords[0], screen);
             /* take a small break */
             usleep(pow(2,20));
         }
@@ -184,8 +189,16 @@ int main(int argc, char *argv[])
             }
         }
         
-        /* Print data to window */
-        print_mouse_data(cords, m.pos, m.click, m.mov[0]);
+        /* display data depending on the screen var */
+        switch(screen) {
+            case 1:
+                print_mouse_stats(cords);
+                break;
+            default:
+            case 0:
+                print_mouse_data(cords, m.pos, m.click, m.mov[0]);
+                break;
+        }
 
         /* refresh the ncurses window */
         refresh();
