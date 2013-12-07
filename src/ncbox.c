@@ -94,6 +94,28 @@ void print_mouse_stats(int cords[])
     mvprintw(cords[1], cords[0] + 10, "### Stats ###");
 }
 
+/**
+ * Print Help page
+ */
+void print_mousing_help(int cords[])
+{
+    int offset = 10;
+    mvprintw(cords[1], cords[0] + 10, "### Help ###");
+
+    mvprintw(cords[1] + 2, cords[0] + 2, "Key");
+    mvprintw(cords[1] + 2, cords[0] + offset, "Description");
+
+    mvprintw(cords[1] + 4, cords[0] + 2, "h");
+    mvprintw(cords[1] + 5, cords[0] + 2, "m");
+    mvprintw(cords[1] + 6, cords[0] + 2, "s");
+    mvprintw(cords[1] + 7, cords[0] + 2, "q");
+
+    mvprintw(cords[1] + 4, cords[0] + offset, "Help page");
+    mvprintw(cords[1] + 5, cords[0] + offset, "Mousing page");
+    mvprintw(cords[1] + 6, cords[0] + offset, "Stats page");
+    mvprintw(cords[1] + 7, cords[0] + offset, "Quit");
+}
+
 
 /**
  * Destroy window.
