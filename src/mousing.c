@@ -74,7 +74,10 @@ int main(int argc, char *argv[])
     int screen = 0;
 
     /* box dim [width, height] */
-    int box_dim[2][2] = {{32, 9},{32,20}};
+    int box_dim[3][2] = {{32, 9}, /* Main mousing box */
+                         {32,20}, /* Stats box */
+                         {32,20}, /* Help box */
+                         };
 
     /* time specific vars */
     char timestr[30];
@@ -98,7 +101,7 @@ int main(int argc, char *argv[])
     my_setup();
     my_colors();
 
-    printw("Press Q to exit. Version: %.2f", VERSION);
+    printw("Press h for help. Version: %.2f", VERSION);
     refresh();
 
     cord_update(cords, old_cords, box_dim, screen);
@@ -128,6 +131,12 @@ int main(int argc, char *argv[])
                 break;
             case 's':
                 screen = 1;
+                cord_update(cords, old_cords, box_dim, screen);
+                destroy_win(my_win);
+                my_win = create_newwin(box_dim, cords[1], cords[0], screen);
+                break;
+            case 'h':
+                screen = 2;
                 cord_update(cords, old_cords, box_dim, screen);
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
@@ -191,6 +200,9 @@ int main(int argc, char *argv[])
         
         /* display data depending on the screen var */
         switch(screen) {
+            case 2:
+                print_mousing_help(cords);
+                break;
             case 1:
                 print_mouse_stats(cords);
                 break;

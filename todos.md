@@ -9,6 +9,7 @@ Mousing Todos
 
 Known bugs
 ==========
+* After introduction the help and stats page, there has been some incidents where bleeding between screens has occurred. Might consider doing a better sweep/clean between screen switches.
 
 Mousing Future Tech
 ===================
