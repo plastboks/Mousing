@@ -116,6 +116,27 @@ void print_mousing_help(int cords[])
     mvprintw(cords[1] + 7, cords[0] + offset, "Quit");
 }
 
+/**
+ * Print Help page
+ */
+void print_mousing_about(int cords[])
+{
+    mvprintw(cords[1], cords[0] + 10, "### About ###");
+    mvprintw(cords[1] + 2, cords[0] + 2, "Mousing is a microscopic");
+    mvprintw(cords[1] + 3, cords[0] + 2, "Linux program for tracking");
+    mvprintw(cords[1] + 4, cords[0] + 2, "mouse movement, and output");
+    mvprintw(cords[1] + 5, cords[0] + 2, "and log to database.");
+
+    mvprintw(cords[1] + 7, cords[0] + 2, "The main reason for this");
+    mvprintw(cords[1] + 8, cords[0] + 2, "program was to learn to");
+    mvprintw(cords[1] + 9, cords[0] + 2, "reduce heavy mouse use.");
+    mvprintw(cords[1] + 10, cords[0] + 2, "The best way to do this");
+    mvprintw(cords[1] + 11, cords[0] + 2, "is to get some numbers");
+    mvprintw(cords[1] + 12, cords[0] + 2, "and compare them on a");
+    mvprintw(cords[1] + 13, cords[0] + 2, "daily basis.");
+
+}
+
 
 /**
  * Destroy window.

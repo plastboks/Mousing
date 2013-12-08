@@ -74,8 +74,9 @@ int main(int argc, char *argv[])
     int screen = 0;
 
     /* box dim [width, height] */
-    int box_dim[3][2] = {{32, 9}, /* Main mousing box */
+    int box_dim[4][2] = {{32, 9}, /* Main mousing box */
                          {32,20}, /* Stats box */
+                         {32,20}, /* Help box */
                          {32,20}, /* Help box */
                          };
 
@@ -141,6 +142,12 @@ int main(int argc, char *argv[])
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
+            case 'a':
+                screen = 3;
+                cord_update(cords, old_cords, box_dim, screen);
+                destroy_win(my_win);
+                my_win = create_newwin(box_dim, cords[1], cords[0], screen);
+                break;
         }
 
         /** 
@@ -200,6 +207,9 @@ int main(int argc, char *argv[])
         
         /* display data depending on the screen var */
         switch(screen) {
+            case 3:
+                print_mousing_about(cords);
+                break;
             case 2:
                 print_mousing_help(cords);
                 break;
