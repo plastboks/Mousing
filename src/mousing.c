@@ -127,24 +127,28 @@ int main(int argc, char *argv[])
             case 'm':
                 screen = 0;
                 cord_update(cords, old_cords, box_dim, screen);
+                clear();
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
             case 's':
                 screen = 1;
                 cord_update(cords, old_cords, box_dim, screen);
+                clear();
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
             case 'h':
                 screen = 2;
                 cord_update(cords, old_cords, box_dim, screen);
+                clear();
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
             case 'a':
                 screen = 3;
                 cord_update(cords, old_cords, box_dim, screen);
+                clear();
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
