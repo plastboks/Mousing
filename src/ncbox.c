@@ -108,18 +108,20 @@ void print_mousing_help(int cords[])
     mvprintw(cords[1] + 4, cords[0] + 2, "h");
     mvprintw(cords[1] + 5, cords[0] + 2, "m");
     mvprintw(cords[1] + 6, cords[0] + 2, "s");
-    mvprintw(cords[1] + 7, cords[0] + 2, "q");
+    mvprintw(cords[1] + 8, cords[0] + 2, "a");
+    mvprintw(cords[1] + 9, cords[0] + 2, "q");
 
-    mvprintw(cords[1] + 4, cords[0] + offset, "Help page");
-    mvprintw(cords[1] + 5, cords[0] + offset, "Mousing page");
+    mvprintw(cords[1] + 4, cords[0] + offset, "Help page (this)");
+    mvprintw(cords[1] + 5, cords[0] + offset, "Mousing");
     mvprintw(cords[1] + 6, cords[0] + offset, "Stats page");
-    mvprintw(cords[1] + 7, cords[0] + offset, "Quit");
+    mvprintw(cords[1] + 8, cords[0] + offset, "About page");
+    mvprintw(cords[1] + 9, cords[0] + offset, "Quit");
 }
 
 /**
  * Print Help page
  */
-void print_mousing_about(int cords[])
+void print_mousing_about(int cords[], float version)
 {
     mvprintw(cords[1], cords[0] + 10, "### About ###");
     mvprintw(cords[1] + 2, cords[0] + 2, "Mousing is a microscopic");
@@ -130,10 +132,12 @@ void print_mousing_about(int cords[])
     mvprintw(cords[1] + 7, cords[0] + 2, "The main reason for this");
     mvprintw(cords[1] + 8, cords[0] + 2, "program was to learn to");
     mvprintw(cords[1] + 9, cords[0] + 2, "reduce heavy mouse use.");
-    mvprintw(cords[1] + 10, cords[0] + 2, "The best way to do this");
-    mvprintw(cords[1] + 11, cords[0] + 2, "is to get some numbers");
-    mvprintw(cords[1] + 12, cords[0] + 2, "and compare them on a");
-    mvprintw(cords[1] + 13, cords[0] + 2, "daily basis.");
+    mvprintw(cords[1] + 10, cords[0] + 2, "The best way to do this is");
+    mvprintw(cords[1] + 11, cords[0] + 2, "to get some numbers and");
+    mvprintw(cords[1] + 12, cords[0] + 2, "compare them on a daily");
+    mvprintw(cords[1] + 13, cords[0] + 2, "basis.");
+
+    mvprintw(cords[1] + 15, cords[0] + 2, "Version: %.2f", version);
 
 }
 

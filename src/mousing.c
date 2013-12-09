@@ -64,6 +64,8 @@ struct {
 
 int main(int argc, char *argv[]) 
 {
+    float version = VERSION;
+
     int retval;
     int cords[2]; /* (x,y) cords for the ncurses box */
     int old_cords[2];
@@ -102,7 +104,7 @@ int main(int argc, char *argv[])
     my_setup();
     my_colors();
 
-    printw("Press h for help. Version: %.2f", VERSION);
+    printw("Press h for help. Version: %.2f", version);
     refresh();
 
     cord_update(cords, old_cords, box_dim, screen);
@@ -212,7 +214,7 @@ int main(int argc, char *argv[])
         /* display data depending on the screen var */
         switch(screen) {
             case 3:
-                print_mousing_about(cords);
+                print_mousing_about(cords, version);
                 break;
             case 2:
                 print_mousing_help(cords);
