@@ -133,3 +133,32 @@ void db_get_mov(int *retval,
         clicks[2] = sqlite3_column_int(*stmt, 3);
     }
 }
+
+/**
+ * Select number of days from database
+ * and return them as a small array.
+ *
+ * @days:       int number of days.
+ *
+ * Returns int array.
+ */
+int *db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt)
+{
+    char buffr[150];
+    char timestr[30];
+    struct tm *local;
+    time_t t;
+    int output[7][4];
+
+    t = time(NULL);
+    local = localtime(&t);
+    strftime(timestr, sizeof(timestr), "%Y-%m-%d", local);
+
+    for (int i = 0; i <= 7; i++) {
+        sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
+        output[i][0] = sqlite3_column_int(*stmt, 0);
+        output[i][1] = sqlite3_column_int(*stmt, 1);
+        output[i][2] = sqlite3_column_int(*stmt, 2);
+        output[i][3] = sqlite3_column_int(*stmt, 3);
+    }
+}

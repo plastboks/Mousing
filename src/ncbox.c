@@ -92,6 +92,8 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
 void print_mouse_stats(int cords[])
 {
     mvprintw(cords[1], cords[0] + 10, "### Stats ###");
+
+    mvprintw(cords[1] + 2, cords[0] + 2, "Activity last 7 days");
 }
 
 /**
