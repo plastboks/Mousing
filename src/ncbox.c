@@ -89,11 +89,19 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
 /**
  * Print stats data
  */
-void print_mouse_stats(int cords[])
+void print_mouse_stats(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int cords[])
 {
+    int data[7][4];
+    int offset = 10;
+
+    db_get_stats_7(retval, handle, stmt, data);
+
     mvprintw(cords[1], cords[0] + 10, "### Stats ###");
 
     mvprintw(cords[1] + 2, cords[0] + 2, "Activity last 7 days");
+
+    mvprintw(cords[1] + 4, cords[0] + 2, "Mov");
+    mvprintw(cords[1] + 4, cords[0] + offset, "Clicks");
 }
 
 /**

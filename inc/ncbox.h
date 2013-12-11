@@ -32,9 +32,11 @@
 #include <ncurses.h>
 #include <fcntl.h>
 
+#include "sqldb.h"
+
 WINDOW *create_newwin(int box_dim[][2], int starty, int startx, int screen);
 void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned int mMov);
-void print_mouse_stats(int cords[]);
+void print_mouse_stats(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int cords[]);
 void print_mousing_help(int cords[]);
 void print_mousing_about(int cords[], float version);
 void destroy_win(WINDOW *local_win);

@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
                 print_mousing_help(cords);
                 break;
             case 1:
-                print_mouse_stats(cords);
+                print_mouse_stats(&retval, &handle, &stmt, cords);
                 break;
             default:
             case 0:

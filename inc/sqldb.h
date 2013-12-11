@@ -44,4 +44,4 @@ void db_get_mov(int *retval,
                 unsigned int *mmov,
                 unsigned int clicks[]
                 );
-int *db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt);
+void db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int data[][4]);
