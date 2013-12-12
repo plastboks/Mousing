@@ -91,16 +91,16 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
  */
 void print_mouse_stats(int cords[], int stats_data[][4], int days)
 {
-    int column[4] = {2, 15, 22, 26};
+    int column[4] = {2, 15, 22, 30};
 
-    mvprintw(cords[1], cords[0] + 9, "### Stats ###");
+    mvprintw(cords[1], cords[0] + 12, "### Stats ###");
 
     mvprintw(cords[1] + 2, cords[0] + column[0], "Last %d days", days);
 
-    mvprintw(cords[1] + 4, cords[0] + column[0], "Movment");
-    mvprintw(cords[1] + 4, cords[0] + column[1], "1");
-    mvprintw(cords[1] + 4, cords[0] + column[2], "2");
-    mvprintw(cords[1] + 4, cords[0] + column[3], "3");
+    mvprintw(cords[1] + 4, cords[0] + column[0], "Movement");
+    mvprintw(cords[1] + 4, cords[0] + column[1], "Left");
+    mvprintw(cords[1] + 4, cords[0] + column[2], "Center");
+    mvprintw(cords[1] + 4, cords[0] + column[3], "Right");
 
 
     for (int i = 1; i <= days; i++) {
