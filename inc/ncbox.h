@@ -34,7 +34,7 @@
 
 WINDOW *create_newwin(int box_dim[][2], int starty, int startx, int screen);
 void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned int mMov);
-void print_mouse_stats(int cords[], int stats_data[][4]);
+void print_mouse_stats(int cords[], int stats_data[][4], int days);
 void print_mousing_help(int cords[]);
 void print_mousing_about(int cords[], float version);
 void destroy_win(WINDOW *local_win);

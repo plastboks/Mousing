@@ -89,7 +89,7 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
 /**
  * Print stats data
  */
-void print_mouse_stats(int cords[], int stats_data[][4])
+void print_mouse_stats(int cords[], int stats_data[][4], int days)
 {
     int column[4] = {2, 14, 20, 26};
 
@@ -101,11 +101,11 @@ void print_mouse_stats(int cords[], int stats_data[][4])
     mvprintw(cords[1] + 2, cords[0] + column[3], "3");
 
 
-    for (int i = 0; i <= 7; i++) {
-        mvprintw(cords[1] + (5+i), cords[0] + column[0], "%s", commaprint(stats_data[i][0]));
-        mvprintw(cords[1] + (5+i), cords[0] + column[1], "%d", stats_data[i][1]);
-        mvprintw(cords[1] + (5+i), cords[0] + column[2], "%d", stats_data[i][2]);
-        mvprintw(cords[1] + (5+i), cords[0] + column[3], "%d", stats_data[i][3]);
+    for (int i = 0; i <= days; i++) {
+        mvprintw(cords[1] + (4+i), cords[0] + column[0], "%s", commaprint(stats_data[i][0]));
+        mvprintw(cords[1] + (4+i), cords[0] + column[1], "%d", stats_data[i][1]);
+        mvprintw(cords[1] + (4+i), cords[0] + column[2], "%d", stats_data[i][2]);
+        mvprintw(cords[1] + (4+i), cords[0] + column[3], "%d", stats_data[i][3]);
     }
 }
 

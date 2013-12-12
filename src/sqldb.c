@@ -142,10 +142,15 @@ void db_get_mov(int *retval,
  * @handle:     sqlite pointer handle.
  * @stmt:       sqlite statement pointer.
  * @data:       int mouse movement.
+ * @days:       int number of days to select.
  *
  * Returns int array.
  */
-void db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int data[][4])
+void db_get_stats(int *retval,
+                  sqlite3 **handle,
+                  sqlite3_stmt **stmt,
+                  int data[][4],
+                  int days)
 {
     char buffr[150];
     char timestr[30];
@@ -154,15 +159,24 @@ void db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int data
 
     tO = time(NULL);
 
-    for (int i = 1; i <= 7; i++) {
-        tC = tO - (i*(3600*24));
+    for (int i = 1; i <= days; i++) {
+        tC = tO - (i*(60*60*24));
         calculated = localtime(&tC);
         strftime(timestr, sizeof(timestr), "%F", calculated);
         sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
 
-        data[i][0] = sqlite3_column_int(*stmt, 0);
-        data[i][1] = sqlite3_column_int(*stmt, 1);
-        data[i][2] = sqlite3_column_int(*stmt, 2);
-        data[i][3] = sqlite3_column_int(*stmt, 3);
+        if ((*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0))) {
+            printf("Selecting from database failed \n");
+        } else if (sqlite3_step(*stmt) == SQLITE_ROW) {
+            data[i][0] = sqlite3_column_int(*stmt, 0);
+            data[i][1] = sqlite3_column_int(*stmt, 1);
+            data[i][2] = sqlite3_column_int(*stmt, 2);
+            data[i][3] = sqlite3_column_int(*stmt, 3);
+        } else {
+            data[i][0] = 0;
+            data[i][1] = 0;
+            data[i][2] = 0;
+            data[i][3] = 0;
+        }
     }
 }

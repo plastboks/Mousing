@@ -33,6 +33,8 @@
 #define RESET_HOUR 0
 #define RESET_MIN 0
 #define RESET_SEC 0
+/* stats days */
+#define STATS_DAYS 12
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,7 +74,8 @@ int main(int argc, char *argv[])
     int sleep_time = pow(2,14);
     int db_write_intval = 0;
 
-    int stats_data[7][4];
+    int stats_days = STATS_DAYS;
+    int stats_data[stats_days][4];
 
     char ch; /* input char [current, old] */
     int screen = 0;
@@ -144,7 +147,7 @@ int main(int argc, char *argv[])
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 /* Fill stats data */
-                db_get_stats_7(&retval, &handle, &stmt, stats_data);
+                db_get_stats(&retval, &handle, &stmt, stats_data, stats_days);
                 break;
             case 'h':
                 /* Help screen */
@@ -231,7 +234,7 @@ int main(int argc, char *argv[])
                 break;
             case 1:
                 /* Stats */
-                print_mouse_stats(cords, stats_data);
+                print_mouse_stats(cords, stats_data, stats_days);
                 break;
             default:
             case 0:
