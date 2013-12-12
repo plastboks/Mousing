@@ -72,6 +72,8 @@ int main(int argc, char *argv[])
     int sleep_time = pow(2,14);
     int db_write_intval = 0;
 
+    int stats_data[7][4];
+
     char ch; /* input char [current, old] */
     int screen = 0;
 
@@ -127,6 +129,7 @@ int main(int argc, char *argv[])
         ch = getch();
         switch(ch) {
             case 'm':
+                /* Mousing screen */
                 screen = 0;
                 cord_update(cords, old_cords, box_dim, screen);
                 clear();
@@ -134,13 +137,17 @@ int main(int argc, char *argv[])
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
             case 's':
+                /* Stats screen */
                 screen = 1;
                 cord_update(cords, old_cords, box_dim, screen);
                 clear();
                 destroy_win(my_win);
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
+                /* Fill stats data */
+                db_get_stats_7(&retval, &handle, &stmt, stats_data);
                 break;
             case 'h':
+                /* Help screen */
                 screen = 2;
                 cord_update(cords, old_cords, box_dim, screen);
                 clear();
@@ -148,6 +155,7 @@ int main(int argc, char *argv[])
                 my_win = create_newwin(box_dim, cords[1], cords[0], screen);
                 break;
             case 'a':
+                /* About screen */
                 screen = 3;
                 cord_update(cords, old_cords, box_dim, screen);
                 clear();
@@ -220,7 +228,7 @@ int main(int argc, char *argv[])
                 print_mousing_help(cords);
                 break;
             case 1:
-                print_mouse_stats(&retval, &handle, &stmt, cords);
+                print_mouse_stats(cords, stats_data);
                 break;
             default:
             case 0:
