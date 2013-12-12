@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
         ch = getch();
         switch(ch) {
             case 'm':
-                /* Mousing screen */
+                /* Default Mousing screen */
                 screen = 0;
                 cord_update(cords, old_cords, box_dim, screen);
                 clear();
@@ -224,22 +224,22 @@ int main(int argc, char *argv[])
         
         /* display data depending on the screen var */
         switch(screen) {
-            case 3:
-                /* About */
-                print_mousing_about(cords, version);
-                break;
-            case 2:
-                /* Help */
-                print_mousing_help(cords);
+            default:
+            case 0:
+                /* Default, mousing */
+                print_mouse_data(cords, m.pos, m.click, m.mov[0]);
                 break;
             case 1:
                 /* Stats */
                 print_mouse_stats(cords, stats_data, stats_days);
                 break;
-            default:
-            case 0:
-                /* Default, mousing */
-                print_mouse_data(cords, m.pos, m.click, m.mov[0]);
+            case 2:
+                /* Help */
+                print_mousing_help(cords);
+                break;
+            case 3:
+                /* About */
+                print_mousing_about(cords, version);
                 break;
         }
 

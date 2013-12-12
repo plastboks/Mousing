@@ -79,9 +79,9 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
     attron(COLOR_PAIR(2));
     mvprintw(cords[1] + 2, cords[0] + offset, "(%04d,%04d)", pos[0], pos[1]);
     mvprintw(cords[1] + 3, cords[0] + offset, "%s ", commaprint(mMov));
-    mvprintw(cords[1] + 4, cords[0] + offset, "%d ", clicks[0]);
-    mvprintw(cords[1] + 5, cords[0] + offset, "%d ", clicks[1]);
-    mvprintw(cords[1] + 6, cords[0] + offset, "%d ", clicks[2]);
+    mvprintw(cords[1] + 4, cords[0] + offset, "%s ", commaprint(clicks[0]));
+    mvprintw(cords[1] + 5, cords[0] + offset, "%s ", commaprint(clicks[1]));
+    mvprintw(cords[1] + 6, cords[0] + offset, "%s ", commaprint(clicks[2]));
     /* turn off colors */
     attroff(COLOR_PAIR(2));
 }
@@ -91,21 +91,23 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
  */
 void print_mouse_stats(int cords[], int stats_data[][4], int days)
 {
-    int column[4] = {2, 14, 20, 26};
+    int column[4] = {2, 15, 22, 26};
 
-    mvprintw(cords[1], cords[0] + 10, "### Stats ###");
+    mvprintw(cords[1], cords[0] + 9, "### Stats ###");
 
-    mvprintw(cords[1] + 2, cords[0] + column[0], "Mov");
-    mvprintw(cords[1] + 2, cords[0] + column[1], "1");
-    mvprintw(cords[1] + 2, cords[0] + column[2], "2");
-    mvprintw(cords[1] + 2, cords[0] + column[3], "3");
+    mvprintw(cords[1] + 2, cords[0] + column[0], "Last %d days", days);
+
+    mvprintw(cords[1] + 4, cords[0] + column[0], "Movment");
+    mvprintw(cords[1] + 4, cords[0] + column[1], "1");
+    mvprintw(cords[1] + 4, cords[0] + column[2], "2");
+    mvprintw(cords[1] + 4, cords[0] + column[3], "3");
 
 
-    for (int i = 0; i <= days; i++) {
-        mvprintw(cords[1] + (4+i), cords[0] + column[0], "%s", commaprint(stats_data[i][0]));
-        mvprintw(cords[1] + (4+i), cords[0] + column[1], "%d", stats_data[i][1]);
-        mvprintw(cords[1] + (4+i), cords[0] + column[2], "%d", stats_data[i][2]);
-        mvprintw(cords[1] + (4+i), cords[0] + column[3], "%d", stats_data[i][3]);
+    for (int i = 1; i <= days; i++) {
+        mvprintw(cords[1] + (5+i), cords[0] + column[0], "%s", commaprint(stats_data[i][0]));
+        mvprintw(cords[1] + (5+i), cords[0] + column[1], "%s", commaprint(stats_data[i][1]));
+        mvprintw(cords[1] + (5+i), cords[0] + column[2], "%s", commaprint(stats_data[i][2]));
+        mvprintw(cords[1] + (5+i), cords[0] + column[3], "%s", commaprint(stats_data[i][3]));
     }
 }
 
@@ -134,11 +136,11 @@ void print_mousing_help(int cords[])
 }
 
 /**
- * Print Help page
+ * Print About page
  */
 void print_mousing_about(int cords[], float version)
 {
-    mvprintw(cords[1], cords[0] + 10, "### About ###");
+    mvprintw(cords[1], cords[0] + 9, "### About ###");
     mvprintw(cords[1] + 2, cords[0] + 2, "Mousing is a microscopic");
     mvprintw(cords[1] + 3, cords[0] + 2, "Linux program for tracking");
     mvprintw(cords[1] + 4, cords[0] + 2, "mouse movement, and output");
