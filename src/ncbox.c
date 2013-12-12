@@ -89,19 +89,24 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
 /**
  * Print stats data
  */
-void print_mouse_stats(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int cords[])
+void print_mouse_stats(int cords[], int stats_data[][4])
 {
-    int data[7][4];
-    int offset = 10;
-
-    db_get_stats_7(retval, handle, stmt, data);
+    int column[4] = {2, 14, 20, 26};
 
     mvprintw(cords[1], cords[0] + 10, "### Stats ###");
 
-    mvprintw(cords[1] + 2, cords[0] + 2, "Activity last 7 days");
+    mvprintw(cords[1] + 2, cords[0] + column[0], "Mov");
+    mvprintw(cords[1] + 2, cords[0] + column[1], "1");
+    mvprintw(cords[1] + 2, cords[0] + column[2], "2");
+    mvprintw(cords[1] + 2, cords[0] + column[3], "3");
 
-    mvprintw(cords[1] + 4, cords[0] + 2, "Mov");
-    mvprintw(cords[1] + 4, cords[0] + offset, "Clicks");
+
+    for (int i = 0; i <= 7; i++) {
+        mvprintw(cords[1] + (5+i), cords[0] + column[0], "%s", commaprint(stats_data[i][0]));
+        mvprintw(cords[1] + (5+i), cords[0] + column[1], "%d", stats_data[i][1]);
+        mvprintw(cords[1] + (5+i), cords[0] + column[2], "%d", stats_data[i][2]);
+        mvprintw(cords[1] + (5+i), cords[0] + column[3], "%d", stats_data[i][3]);
+    }
 }
 
 /**
