@@ -138,7 +138,10 @@ void db_get_mov(int *retval,
  * Select number of days from database
  * and return them as a small array.
  *
- * @days:       int number of days.
+ * @retval:     int pointer retval.
+ * @handle:     sqlite pointer handle.
+ * @stmt:       sqlite statement pointer.
+ * @data:       int mouse movement.
  *
  * Returns int array.
  */
@@ -146,15 +149,17 @@ void db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int data
 {
     char buffr[150];
     char timestr[30];
-    struct tm *local;
-    time_t t;
+    struct tm *calculated;
+    time_t tO, tC;
 
-    t = time(NULL);
-    local = localtime(&t);
-    strftime(timestr, sizeof(timestr), "%F", local);
+    tO = time(NULL);
 
-    for (int i = 0; i <= 7; i++) {
+    for (int i = 1; i <= 7; i++) {
+        tC = tO - (i*(3600*24));
+        calculated = localtime(&tC);
+        strftime(timestr, sizeof(timestr), "%F", calculated);
         sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
+
         data[i][0] = sqlite3_column_int(*stmt, 0);
         data[i][1] = sqlite3_column_int(*stmt, 1);
         data[i][2] = sqlite3_column_int(*stmt, 2);
