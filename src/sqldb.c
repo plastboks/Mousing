@@ -120,7 +120,7 @@ void db_get_mov(int *retval,
 
     t = time(NULL);
     local = localtime(&t);
-    strftime(timestr, sizeof(timestr), "%Y-%m-%d", local);
+    strftime(timestr, sizeof(timestr), "%F", local);
 
     sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
 
@@ -151,7 +151,7 @@ void db_get_stats_7(int *retval, sqlite3 **handle, sqlite3_stmt **stmt, int data
 
     t = time(NULL);
     local = localtime(&t);
-    strftime(timestr, sizeof(timestr), "%Y-%m-%d", local);
+    strftime(timestr, sizeof(timestr), "%F", local);
 
     for (int i = 0; i <= 7; i++) {
         sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
