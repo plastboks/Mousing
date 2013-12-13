@@ -43,7 +43,7 @@
 #include <fcntl.h>
 
 #include "x11mouse.h"
-#include "ncbox.h"
+#include "screens.h"
 #include "sqldb.h"
 #include "functions.h"
 

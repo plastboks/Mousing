@@ -1,7 +1,7 @@
 /*
- * Mousing ncbox.h file
+ * Mousing screens.h file
  *
- * @filename: ncbox.h
+ * @filename: screens.h
  *
  * @version: 0.0.2
  *

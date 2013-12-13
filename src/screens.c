@@ -1,7 +1,7 @@
 /*
  * Mousing ncurses box sourcefile
  *
- * @filename: ncbox.c
+ * @filename: screens.c
  *
  * @version: 0.0.2
  *
@@ -26,7 +26,7 @@
  *
  */
 
-#include "ncbox.h"
+#include "screens.h"
 #include "functions.h"
 
 /**
