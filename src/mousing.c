@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
     /* box dim [width, height] */
     int box_dim[4][2] = {{32, 9}, /* Main mousing box */
-                         {38,20}, /* Stats box */
+                         {38, stats_days+8}, /* Stats box */
                          {32,20}, /* Help box */
                          {32,20}, /* Help box */
                          };
