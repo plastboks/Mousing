@@ -3,7 +3,7 @@
  *
  * @filename: mousing.c
  *
- * @version: 0.0.3
+ * @version: 0.0.4
  *
  * @date: 2013-11-07
  *
@@ -27,7 +27,7 @@
  */
 
 #define _BSD_SOURCE
-#define VERSION 0.03
+#define VERSION 0.04
 #define DB_WRITE_INTVAL 8
 /* reset time */
 #define RESET_HOUR 0
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
     /* box dim [width, height] */
     int box_dim[4][2] = {{32, 9}, /* Main mousing box */
-                         {38, stats_days+8}, /* Stats box */
+                         {38, stats_days+6}, /* Stats box */
                          {32,20}, /* Help box */
                          {32,20}, /* Help box */
                          };

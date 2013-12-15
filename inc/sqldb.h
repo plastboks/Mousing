@@ -3,7 +3,7 @@
  *
  * @filename: sqldb.h
  *
- * @version: 0.0.2
+ * @version: 0.0.4
  *
  * @date: 2013-11-07
  *
