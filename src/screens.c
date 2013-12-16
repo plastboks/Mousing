@@ -70,7 +70,7 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
     mvprintw(cords[1], cords[0] + 2, "Mousing");
     /* shift to magenta colors */
     attron(COLOR_PAIR(3));
-    mvprintw(cords[1] + 2, cords[0] + 2, "Pos:");
+    mvprintw(cords[1] + 2, cords[0] + 2, "Position:");
     mvprintw(cords[1] + 3, cords[0] + 2, "Movement:");
     mvprintw(cords[1] + 4, cords[0] + 2, "Left click:");
     mvprintw(cords[1] + 5, cords[0] + 2, "Middle click:");
