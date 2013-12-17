@@ -189,7 +189,7 @@ void cord_update(int cords[], int old_cords[], int box_dim[][2], int screen)
  *
  * Returns nothing.
  */
-void my_setup()
+void screen_setup()
 {
     initscr();
     curs_set(0);
@@ -202,7 +202,7 @@ void my_setup()
  *
  * Returns nothing.
  */
-void my_colors()
+void screen_colors()
 {
     if (has_colors() == FALSE) {
         endwin();

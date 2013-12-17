@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
     db_open_database(&retval, &handle);
     db_table_create(&retval, &handle);
 
-    my_setup();
-    my_colors();
+    screen_setup();
+    screen_colors();
 
     printw("Press h for help. Version: %.2f", version);
     refresh();

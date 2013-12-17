@@ -39,5 +39,5 @@ void print_mousing_help(int cords[]);
 void print_mousing_about(int cords[], float version);
 void destroy_win(WINDOW *local_win);
 void cord_update(int cords[], int old_cords[], int box_dim[][2], int screen);
-void my_setup();
-void my_colors();
+void screen_setup();
+void screen_colors();
