@@ -5,7 +5,7 @@ Mousing is a microscopic Linux program for tracking mouse movement (scrolling in
 About
 =====
 The main reason for this program was to learn to reduce heavy mouse use. 
-The best way to do this is to get some numbers and comparing them on a daily basis.
+One way to do this is to get some numbers and comparing them on a daily basis.
 
 Compiling
 =========
