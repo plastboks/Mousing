@@ -42,6 +42,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "config.h"
 #include "x11mouse.h"
 #include "screens.h"
 #include "sqldb.h"

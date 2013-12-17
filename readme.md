@@ -21,6 +21,7 @@ Dependencies
   * ncurses
   * X11
   * sqlite
+  * libconfig
 
 Branches
 ========
