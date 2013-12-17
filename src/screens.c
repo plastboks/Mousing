@@ -67,7 +67,10 @@ WINDOW *create_newwin(int box_dim[][2], int starty, int startx, int screen)
 void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned int mMov)
 {
     int offset = 18;
-    mvprintw(cords[1], cords[0] + 2, "Mousing");
+
+    /* box title */
+    mvprintw(cords[1], cords[0] + 2, " Mousing ");
+
     /* shift to magenta colors */
     attron(COLOR_PAIR(3));
     mvprintw(cords[1] + 2, cords[0] + 2, "Position:");
@@ -93,7 +96,8 @@ void print_mouse_stats(int cords[], int stats_data[][4], int days)
 {
     int column[4] = {2, 15, 22, 30};
 
-    mvprintw(cords[1], cords[0] + 2, "Stats - Last %d days", days);
+    /* box title */
+    mvprintw(cords[1], cords[0] + 2, " Stats - Last %d days ", days);
 
     mvprintw(cords[1] + 2, cords[0] + column[0], "Movement");
     mvprintw(cords[1] + 2, cords[0] + column[1], "Left");
@@ -115,7 +119,9 @@ void print_mouse_stats(int cords[], int stats_data[][4], int days)
 void print_mousing_help(int cords[])
 {
     int offset = 10;
-    mvprintw(cords[1], cords[0] + 2, "Help");
+
+    /* box title */
+    mvprintw(cords[1], cords[0] + 2, " Help ");
 
     mvprintw(cords[1] + 2, cords[0] + 2, "Key");
     mvprintw(cords[1] + 2, cords[0] + offset, "Description");
@@ -138,7 +144,9 @@ void print_mousing_help(int cords[])
  */
 void print_mousing_about(int cords[], float version)
 {
-    mvprintw(cords[1], cords[0] + 2, "About");
+    /* box title */
+    mvprintw(cords[1], cords[0] + 2, " About ");
+
     mvprintw(cords[1] + 2, cords[0] + 2, "Mousing is a microscopic");
     mvprintw(cords[1] + 3, cords[0] + 2, "Linux program for tracking");
     mvprintw(cords[1] + 4, cords[0] + 2, "mouse movement, and output");
