@@ -27,3 +27,24 @@
  */
 
 #include "config.h"
+
+/**
+ * Setup mousing. Create folders for database files and config files
+ *
+ * @returns nothing.
+ */
+void config_setup() {
+    char *homedir;
+    char path[512];
+    struct stat st;
+
+    homedir = getenv("HOME");
+    sprintf(path, "%s/.mousing", homedir);
+
+    /**
+     * Check if directory exists, if not create it.
+     */
+    if (stat(path, &st) != 0) {
+        mkdir(path, 0755);
+    }
+}

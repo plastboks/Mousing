@@ -40,7 +40,7 @@ void db_open_database(int *retval, sqlite3 **handle) {
     
     char *homedir = getenv("HOME");
     char buffr[150];
-    sprintf(buffr, "%s/.mousing.db", homedir);
+    sprintf(buffr, "%s/.mousing/mousing.db", homedir);
 
     if ((*retval = sqlite3_open(buffr, handle))) {
         printf("Database connection failed \n");
