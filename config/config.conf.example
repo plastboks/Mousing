@@ -1,0 +1,26 @@
+# Example configuration file for mousing
+
+version = "0.01";
+
+application:
+{
+
+    reset: 
+    {
+        hour = 0;
+        minute = 0;
+        second = 0;
+    };
+
+    stats:
+    {
+        days = 12;
+    };
+
+    database:
+    {
+        filename = "mousing.db";
+        writeintval = 8;
+    };
+
+};
