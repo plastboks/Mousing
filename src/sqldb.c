@@ -31,12 +31,13 @@
 /**
  * Open database.
  *
- * @retval:     int pointer retval.
- * @handle:     sqlite pointer handle.
+ * @retval      int pointer retval.
+ * @handle      sqlite pointer handle.
  *
  * Return nothing.
  */
-void db_open_database(int *retval, sqlite3 **handle) {
+void db_open_database(int *retval, sqlite3 **handle)
+{
     
     char *homedir = getenv("HOME");
     char buffr[150];
@@ -50,8 +51,8 @@ void db_open_database(int *retval, sqlite3 **handle) {
 /**
  * Create table for database.
  *
- * @retval:     int pointer retval.
- * @handle:     sqlite pointer handle.
+ * @retval      int pointer retval.
+ * @handle      sqlite pointer handle.
  *
  * Returns nothing.
  */
@@ -75,11 +76,11 @@ void db_table_create(int *retval, sqlite3 **handle)
 /**
  * Insert data into database.
  *
- * @retval:     int pointer retval.
- * @handle:     sqlite pointer handle.
- * @mmov:       int mouse movement.
- * @pos[]:      int [x,y] mouse position.
- * @clicks[]:   int [0,1,2] mouse clicks.
+ * @retval      int pointer retval.
+ * @handle      sqlite pointer handle.
+ * @mmov        int mouse movement.
+ * @pos[]       int [x,y] mouse position.
+ * @clicks[]    int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
@@ -99,11 +100,11 @@ void db_insert(int *retval,
 /**
  * Select from database.
  *
- * @retval:     int pointer retval.
- * @handle:     sqlite pointer handle.
- * @stmt:       sqlite statement pointer.
- * @mmov:       int mouse movement.
- * @clicks[]:   int [0,1,2] mouse clicks.
+ * @retval      int pointer retval.
+ * @handle      sqlite pointer handle.
+ * @stmt        sqlite statement pointer.
+ * @mmov        int mouse movement.
+ * @clicks[]    int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
@@ -138,11 +139,11 @@ void db_get_mov(int *retval,
  * Select number of days from database
  * and return them as a small array.
  *
- * @retval:     int pointer retval.
- * @handle:     sqlite pointer handle.
- * @stmt:       sqlite statement pointer.
- * @data:       int mouse movement.
- * @days:       int number of days to select.
+ * @retval      int pointer retval.
+ * @handle      sqlite pointer handle.
+ * @stmt        sqlite statement pointer.
+ * @data        int mouse movement.
+ * @days        int number of days to select.
  *
  * Returns int array.
  */

@@ -31,9 +31,10 @@
 /**
  * Setup mousing. Create folders for database files and config files
  *
- * @returns nothing.
+ * Returns nothing.
  */
-void config_setup() {
+void config_setup()
+{
     char *homedir;
     char path[512];
     struct stat st;

@@ -32,10 +32,10 @@
 /**
  * Create ncurses window.
  *
- * @height:     int height.
- * @width:      int width.
- * @startx:     int start x pos.
- * @starty:     int start y pos.
+ * @height      int height.
+ * @width       int width.
+ * @startx      int start x pos.
+ * @starty      int start y pos.
  *
  * Returns WINDOW.
  */
@@ -56,11 +56,11 @@ WINDOW *create_newwin(int box_dim[][2], int starty, int startx, int screen)
 /**
  * Print mouse data.
  *
- * @staryx:     int start x pos for text.
+ * @staryx      int start x pos for text.
  * @cords[]     int [x,y] cords for text positions.
- * @pos[]:      int [x,y] pos for mouse position.
- * @clicks[]:   int [0,1,2] array for mouse clicks.
- * @mMov:       int mouse movement.
+ * @pos[]       int [x,y] pos for mouse position.
+ * @clicks[]    int [0,1,2] array for mouse clicks.
+ * @mMov        int mouse movement.
  *
  * Returns nothing.
  */
@@ -91,6 +91,12 @@ void print_mouse_data(int cords[], int pos[], unsigned int clicks[], unsigned in
 
 /**
  * Print stats data
+ *
+ * @cords       int array box coordinates.
+ * @stats_data  int array stats data.
+ * @days        int days, number of days stats is generated for.
+ *
+ * Returns nothing.
  */
 void print_mouse_stats(int cords[], int stats_data[][4], int days)
 {
@@ -115,6 +121,10 @@ void print_mouse_stats(int cords[], int stats_data[][4], int days)
 
 /**
  * Print Help page
+ *
+ * @cords       int array box coordinates.
+ *
+ * Returns nothing.
  */
 void print_mousing_help(int cords[])
 {
@@ -141,6 +151,11 @@ void print_mousing_help(int cords[])
 
 /**
  * Print About page
+ *
+ * @cords       int array box coordinates.
+ * @version     float version, mousing version.
+ *
+ * Returns nothing.
  */
 void print_mousing_about(int cords[], float version)
 {
@@ -168,7 +183,7 @@ void print_mousing_about(int cords[], float version)
 /**
  * Destroy window.
  *
- * @local_win:      pointer to WINDOW.
+ * @local_win       pointer to WINDOW.
  *
  * Returns nothing.
  */
@@ -183,6 +198,13 @@ void destroy_win(WINDOW *local_win)
 
 /**
  * Update screen and box cords
+ *
+ * @cords       int array box coordinates.
+ * @old_coords  int array old box coordinates.
+ * @box_dim     int array box dimensions.
+ * @screen      int representing screen.
+ * 
+ * Returns nothing.
  */
 void cord_update(int cords[], int old_cords[], int box_dim[][2], int screen)
 {
