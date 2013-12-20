@@ -6,10 +6,11 @@ Mousing Todos
   of the binary files in into users dotfiles.
     * Place a sample config file into directory
     * Use default configurations, but let configfile override this settings.
-
+* Support different storage types as Plain File, PostgreSQL and so forth.
 
 Known bugs
 ==========
+* The "movement based on mouseposition when starting Mousing without data" bug seems to not be solved.
 
 Mousing Future Tech
 ===================
