@@ -10,7 +10,7 @@ Mousing Todos
 
 Known bugs
 ==========
-* The "movement based on mouseposition when starting Mousing without data" bug seems to not be solved.
+* If the mouse is clicked but not moved, the save to the database does not work as expected.
 
 Mousing Future Tech
 ===================
