@@ -132,6 +132,8 @@ void db_get_mov(int *retval,
         clicks[0] = sqlite3_column_int(*stmt, 1);
         clicks[1] = sqlite3_column_int(*stmt, 2);
         clicks[2] = sqlite3_column_int(*stmt, 3);
+    } else {
+        *mmov = 0;
     }
 }
 
