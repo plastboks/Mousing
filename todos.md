@@ -10,7 +10,6 @@ Mousing Todos
 
 Known bugs
 ==========
-* If the mouse is clicked but not moved, the save to the database does not work as expected.
 
 Mousing Future Tech
 ===================

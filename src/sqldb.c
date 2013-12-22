@@ -123,15 +123,15 @@ void db_get_mov(int *retval,
     local = localtime(&t);
     strftime(timestr, sizeof(timestr), "%F", local);
 
-    sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
+    sprintf(buffr, "select id, mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by id desc limit 1", timestr);
 
     if ((*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0))) {
         printf("Selecting from database failed \n");
     } else if (sqlite3_step(*stmt) == SQLITE_ROW) {
-        *mmov = sqlite3_column_int(*stmt, 0);
-        clicks[0] = sqlite3_column_int(*stmt, 1);
-        clicks[1] = sqlite3_column_int(*stmt, 2);
-        clicks[2] = sqlite3_column_int(*stmt, 3);
+        *mmov = sqlite3_column_int(*stmt, 1);
+        clicks[0] = sqlite3_column_int(*stmt, 2);
+        clicks[1] = sqlite3_column_int(*stmt, 3);
+        clicks[2] = sqlite3_column_int(*stmt, 4);
     } else {
         *mmov = 0;
     }
