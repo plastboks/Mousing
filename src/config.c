@@ -1,5 +1,5 @@
 /*
- * Mousing config sourcecode file
+ * Mousing config source code file
  *
  * @filename: config.c
  *
@@ -7,7 +7,7 @@
  *
  * @date: 2013-12-17
  *
- * @description: Mousing functions sourcecode file
+ * @description: Mousing functions source code file
  *
  * This file is part of Mousing.
  *

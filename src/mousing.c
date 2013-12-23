@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
 
     x11read_init();
 
+    /* Load config */
     config_setup();
 
     /* open database and create/check for tables */
