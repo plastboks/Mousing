@@ -92,7 +92,8 @@ void db_insert(int *retval,
 {
     char buffr[150];
 
-    sprintf(buffr, "insert into mouse (mposx, mposy, mmov, mlc, mmc, mrc) values ('%d', '%d', '%d', '%d', '%d', '%d')",
+    sprintf(buffr, "insert into mouse (mposx, mposy, mmov, mlc, mmc, mrc)\
+                    values ('%d', '%d', '%d', '%d', '%d', '%d')",
             pos[0], pos[1], mmov, clicks[0], clicks[1], clicks[2]);
     *retval = sqlite3_exec(*handle, buffr, 0, 0, 0);
 }
@@ -123,7 +124,9 @@ void db_get_mov(int *retval,
     local = localtime(&t);
     strftime(timestr, sizeof(timestr), "%F", local);
 
-    sprintf(buffr, "select id, mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by id desc limit 1", timestr);
+    sprintf(buffr, "select id, mmov, mlc, mmc, mrc from mouse where\
+                    timestamp like '%s%%' order by id desc limit 1",
+            timestr);
 
     if ((*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0))) {
         printf("Selecting from database failed \n");
@@ -166,7 +169,9 @@ void db_get_stats(int *retval,
         tC = tO - (i*(60*60*24));
         calculated = localtime(&tC);
         strftime(timestr, sizeof(timestr), "%F", calculated);
-        sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where timestamp like '%s%%' order by mmov desc limit 1", timestr);
+        sprintf(buffr, "select mmov, mlc, mmc, mrc from mouse where\
+                        timestamp like '%s%%' order by mmov desc limit 1", 
+                timestr);
 
         if ((*retval = sqlite3_prepare_v2(*handle, buffr, -1, stmt, 0))) {
             printf("Selecting from database failed \n");
