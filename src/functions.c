@@ -29,7 +29,7 @@
 #include "functions.h"
 
 /**
- * code found on the interwebs 
+ * Code found on the interwebs 
  * @ http://www.eskimo.com/~scs/c-faq.com/stdio/commaprint.html 
  * this adds a function for printing unsigned integers (longs)
  * with tousands commaseperator.
@@ -70,9 +70,40 @@ char *commaprint(unsigned long n)
     return p;
 }
 
-void exp_inc(int *input, int expo) {
+
+/**
+ * My own implementation of the pow function found in the
+ * math library. This function is declared here because I
+ * did not want to include a whole library for one function.
+ * mpow is just a aberration of mousing power.
+ *
+ * @base        int base integer.
+ * @exponent    int exponent.
+ *
+ * Returns integer
+ */
+int mpow(int base, int exponent)
+{
+    for (int i = 0; i <= exponent; i++) {
+        base  = base * exponent;
+    }
+    return base;
+}
+
+
+/**
+ * A small and banal function for doing something quite easy.
+ * This function is placed here mostly for aesthetic reasons.
+ *
+ * @input       int input
+ * @expo        int expo
+ *
+ * Returns int
+ */
+void exp_inc(int *input, int expo)
+{
   *input += 10;
-  if (*input > pow(2,expo)) {
+  if (*input > mpow(2,expo)) {
     *input = 1;
   }
 }

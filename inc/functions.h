@@ -26,8 +26,8 @@
  *
  */
 
-#include <math.h>
 #include <locale.h>
 
 char *commaprint(unsigned long n);
+int mpow(int base, int exponent);
 void exp_inc(int *input, int expo);
