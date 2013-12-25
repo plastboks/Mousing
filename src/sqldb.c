@@ -78,9 +78,9 @@ void db_table_create(int *retval, sqlite3 **handle)
  *
  * @retval      int pointer retval.
  * @handle      sqlite pointer handle.
- * @mmov        int mouse movement.
+ * @mmov        unsigned int mouse movement.
  * @pos[]       int [x,y] mouse position.
- * @clicks[]    int [0,1,2] mouse clicks.
+ * @clicks[]    unsigned int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
@@ -104,8 +104,8 @@ void db_insert(int *retval,
  * @retval      int pointer retval.
  * @handle      sqlite pointer handle.
  * @stmt        sqlite statement pointer.
- * @mmov        int mouse movement.
- * @clicks[]    int [0,1,2] mouse clicks.
+ * @mmov        unsigned int mouse movement.
+ * @clicks[]    unsigned int [0,1,2] mouse clicks.
  *
  * Returns nothing.
  */
